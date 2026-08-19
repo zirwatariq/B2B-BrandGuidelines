@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tkxel — B2B Collateral Guidelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0A0B;
+  --ink-2:#4A4A50;
+  --ink-3:#8B8B93;
+  --line:#E3E3E6;
+  --line-2:#F0F0F2;
+  --paper:#FFFFFF;
+  --paper-2:#FAFAFB;
+  --blue:#1F5FE0;
+  --blue-deep:#0B3BA8;
+  --blue-tint:#EDF2FE;
+  --red:#C4402B;
+  --green:#1B7A4B;
+  --nav-w:264px;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --sans:"Outfit",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:32px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  font-family:var(--sans);background:var(--paper);color:var(--ink);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;font-size:10.5px;color:var(--ink-3)}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;top:0;left:0;width:var(--nav-w);height:100vh;
+  border-right:1px solid var(--line);padding:36px 0 24px;
+  display:flex;flex-direction:column;background:var(--paper);z-index:50;
+}
+.brand{padding:0 28px 28px;border-bottom:1px solid var(--line)}
+.brand .wm{font-size:22px;font-weight:700;letter-spacing:-.03em}
+.brand .wm sup{font-size:9px;vertical-align:super;font-weight:500}
+.brand .tag{font-size:11px;color:var(--ink-2);line-height:1.35;margin-top:5px;max-width:150px}
+.navlist{list-style:none;overflow-y:auto;padding:14px 0;flex:1}
+.navlist a{
+  display:flex;gap:12px;align-items:baseline;padding:7px 28px;
+  text-decoration:none;color:var(--ink-2);font-size:14px;
+  border-left:2px solid transparent;transition:color .15s,border-color .15s;
+}
+.navlist a:hover{color:var(--ink)}
+.navlist a.on{color:var(--ink);border-left-color:var(--blue);font-weight:600}
+.navlist .n{font-family:var(--mono);font-size:10px;color:var(--ink-3);min-width:24px}
+.navlist a.on .n{color:var(--blue)}
+.navlist .grp{padding:16px 28px 6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase}
+.navfoot{padding:16px 28px 0;border-top:1px solid var(--line);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--ink-3);line-height:1.8}
+
+/* ---------- layout ---------- */
+main{margin-left:var(--nav-w)}
+.wrap{max-width:880px;padding:0 64px}
+section{border-bottom:1px solid var(--line);padding:88px 0}
+section:last-child{border-bottom:0}
+
+/* ---------- hero ---------- */
+.hero{padding:0;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero-in{padding:104px 64px 72px;max-width:880px;position:relative;z-index:2}
+.hero h1{
+  font-size:clamp(48px,7.4vw,92px);line-height:.92;letter-spacing:-.045em;
+  font-weight:800;margin:22px 0 26px;
+}
+.hero p{font-size:19px;color:var(--ink-2);max-width:560px;line-height:1.55}
+.hero-meta{display:flex;gap:34px;margin-top:44px;padding-top:22px;border-top:1px solid var(--line)}
+.hero-meta div span{display:block}
+.hero-blob{position:absolute;top:-160px;right:-120px;width:620px;height:620px;opacity:.5;z-index:1;pointer-events:none}
+
+/* ---------- headings ---------- */
+.sec-head{display:flex;gap:26px;align-items:flex-start;margin-bottom:14px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--blue);padding-top:14px;min-width:34px}
+h2{font-size:clamp(30px,3.6vw,42px);letter-spacing:-.035em;font-weight:700;line-height:1.06}
+.sec-fmt{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--ink-3);margin:9px 0 0 60px;text-transform:uppercase}
+.sec-intro{margin:26px 0 0 60px;max-width:620px;color:var(--ink-2);font-size:16.5px}
+h3{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink);margin:52px 0 18px;padding-bottom:9px;border-bottom:1px solid var(--ink);
+}
+.body-block{margin-left:60px}
+@media(max-width:900px){.body-block,.sec-intro,.sec-fmt{margin-left:0}}
+
+/* ---------- rule list ---------- */
+.rules{list-style:none}
+.rules li{padding:13px 0;border-bottom:1px solid var(--line-2);display:flex;gap:18px}
+.rules li:last-child{border-bottom:0}
+.rules b{font-weight:600;min-width:150px;flex-shrink:0}
+.rules span{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{
+  text-align:left;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:400;
+  padding:0 14px 9px 0;border-bottom:1px solid var(--ink);
+}
+td{padding:11px 14px 11px 0;border-bottom:1px solid var(--line-2);vertical-align:top;color:var(--ink-2)}
+td:first-child{color:var(--ink);font-weight:500}
+td code{font-family:var(--mono);font-size:12px;color:var(--blue);background:var(--blue-tint);padding:2px 6px;border-radius:3px}
+
+/* ---------- do / dont ---------- */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media(max-width:760px){.dd{grid-template-columns:1fr}}
+.dd h4{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;font-weight:500}
+.dd .do h4{color:var(--green)}
+.dd .dont h4{color:var(--red)}
+.dd ul{list-style:none}
+.dd li{padding:9px 0 9px 22px;position:relative;font-size:14.5px;color:var(--ink-2);border-bottom:1px solid var(--line-2)}
+.dd li:last-child{border-bottom:0}
+.dd li::before{position:absolute;left:0;top:9px;font-family:var(--mono);font-size:12px}
+.dd .do li::before{content:"+";color:var(--green)}
+.dd .dont li::before{content:"−";color:var(--red)}
+
+/* ---------- callout ---------- */
+.note{border-left:2px solid var(--blue);padding:4px 0 4px 20px;margin:30px 0;color:var(--ink-2);font-size:15.5px;max-width:620px}
+.note strong{color:var(--ink);font-weight:600}
+
+/* ---------- shape system / generator ---------- */
+.gen{display:grid;grid-template-columns:1fr 300px;gap:44px;align-items:start}
+@media(max-width:1180px){.gen{grid-template-columns:1fr}}
+.shapegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.shapebtn{
+  background:none;border:1px solid var(--line);cursor:pointer;font-family:inherit;
+  padding:20px 10px 16px;text-align:center;transition:border-color .15s,background .15s;
+}
+.shapebtn:hover{border-color:var(--ink-3);background:var(--paper-2)}
+.shapebtn[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint)}
+.shapebtn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.shapebtn svg{width:38px;height:38px;display:block;margin:0 auto 12px}
+.shapebtn .lab{font-size:12.5px;font-weight:600;line-height:1.25;display:block;color:var(--ink)}
+.shapebtn .mean{font-family:var(--mono);font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);display:block;margin-top:6px;line-height:1.5}
+
+.cover{
+  border:1px solid var(--line);aspect-ratio:210/297;padding:26px;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--paper);
+}
+.cover .cwm{font-size:14px;font-weight:700;letter-spacing:-.03em;position:relative;z-index:2}
+.cover .cshape{position:absolute;top:-40px;right:-60px;width:280px;height:280px;z-index:1}
+.cover .ctitle{margin-top:auto;font-size:27px;font-weight:700;letter-spacing:-.035em;line-height:1.03;position:relative;z-index:2}
+.cover .ceyebrow{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);position:relative;z-index:2;margin-bottom:9px}
+.cover .cfoot{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:18px;padding-top:11px;border-top:1px solid var(--line);position:relative;z-index:2;display:flex;justify-content:space-between}
+.cover-cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+
+/* ---------- checklist ---------- */
+.qa{list-style:none;columns:2;column-gap:36px}
+@media(max-width:760px){.qa{columns:1}}
+.qa li{break-inside:avoid;padding:9px 0 9px 26px;position:relative;font-size:14.5px;color:var(--ink-2)}
+.qa li::before{content:"";position:absolute;left:0;top:12px;width:11px;height:11px;border:1px solid var(--ink-3)}
+
+/* ---------- open items ---------- */
+.open{background:var(--paper-2);border:1px solid var(--line);padding:26px 28px;margin-top:16px}
+.open ol{margin-left:18px;font-size:14.5px;color:var(--ink-2)}
+.open li{padding:6px 0}
+
+@media(max-width:900px){
+  nav{position:static;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .navlist{max-height:200px}
+  main{margin-left:0}
+  .wrap,.hero-in{padding-left:24px;padding-right:24px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#5B93F5"/><stop offset="55%" stop-color="#1F5FE0"/><stop offset="100%" stop-color="#0B3BA8"/>
+  </linearGradient>
+  <filter id="soft" x="-45%" y="-45%" width="190%" height="190%">
+    <feGaussianBlur stdDeviation="2.4"/>
+  </filter>
+  <filter id="softbig" x="-45%" y="-45%" width="190%" height="190%">
+    <feGaussianBlur stdDeviation="9"/>
+  </filter>
+
+  <g id="s-ai"><path d="M50 8c4 22 16 34 38 42-22 8-34 20-38 42-4-22-16-34-38-42 22-8 34-20 38-42z"/></g>
+  <g id="s-cloud"><circle cx="34" cy="34" r="19"/><circle cx="66" cy="34" r="19"/><circle cx="34" cy="66" r="19"/><circle cx="66" cy="66" r="19"/></g>
+  <g id="s-eng"><path d="M50 12a38 38 0 100 76 38 38 0 000-76zm0 22a16 16 0 110 32 16 16 0 010-32z"/></g>
+  <g id="s-adv"><path d="M16 20h30v34c0 16-10 24-26 26v-12c8-2 12-6 12-14H16V20zm38 0h30v34c0 16-10 24-26 26v-12c8-2 12-6 12-14H54V20z"/></g>
+  <g id="s-cyber"><rect x="16" y="16" width="68" height="68" rx="7"/></g>
+  <g id="s-impl"><path d="M50 12a38 38 0 00-38 38h22a16 16 0 0116-16V12z"/><path d="M50 12a38 38 0 0138 38H66a16 16 0 00-16-16V12z" opacity=".45"/></g>
+  <g id="s-opt"><path d="M58 8L22 56h22l-6 38 40-52H54l4-34z"/></g>
+  <g id="s-engage"><path d="M14 84V16l24 30V16l0 0v68L14 84z"/><path d="M86 84V16L62 46V16l0 0v68l24 0z"/></g>
+  <g id="s-bus"><path d="M22 88V48a28 28 0 0156 0v40H58V48a8 8 0 00-16 0v40H22z"/></g>
+</defs>
+</svg>
+
+<nav>
+  <div class="brand">
+    <div class="wm">tkxel<sup>®</sup></div>
+    <div class="tag">Reimagine your business with AI</div>
+  </div>
+  <ul class="navlist" id="navlist">
+    <li class="grp">Foundation</li>
+    <li><a href="#shapes" class="on"><span class="n">0.0</span> Shape System</a></li>
+    <li class="grp">Collateral</li>
+    <li><a href="#s1"><span class="n">1.0</span> White Paper</a></li>
+    <li><a href="#s2"><span class="n">2.0</span> Report</a></li>
+    <li><a href="#s3"><span class="n">3.0</span> Case Study</a></li>
+    <li><a href="#s4"><span class="n">4.0</span> Brochure</a></li>
+    <li><a href="#s5"><span class="n">5.0</span> Deck</a></li>
+    <li><a href="#s6"><span class="n">6.0</span> Checklist</a></li>
+    <li><a href="#s7"><span class="n">7.0</span> E-Book</a></li>
+    <li><a href="#s8"><span class="n">8.0</span> Social Media</a></li>
+    <li class="grp">Application</li>
+    <li><a href="#s9"><span class="n">9.0</span> Usage &amp; Governance</a></li>
+  </ul>
+  <div class="navfoot">Version 1.0<br>Brand Book / Toolkit<br>tkxel.com</div>
+</nav>
+
+<main>
+
+<header class="hero">
+  <svg class="hero-blob" viewBox="0 0 100 100" aria-hidden="true">
+    <use href="#s-ai" fill="url(#g)" filter="url(#softbig)"/>
+  </svg>
+  <div class="hero-in">
+    <div class="mono">Brand Book · B2B Collateral</div>
+    <h1>Every asset<br>is a touchpoint.</h1>
+    <p>How tkxel's B2B collateral is built — eight formats, one system. Foundational identity lives in the tkxel Brand Guidelines; this document governs application.</p>
+    <div class="hero-meta">
+      <div><span class="mono">Version</span><span>1.0</span></div>
+      <div><span class="mono">Formats</span><span>Eight</span></div>
+      <div><span class="mono">Language</span><span>US English</span></div>
+      <div><span class="mono">Standard</span><span>WCAG 2.1 AA</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ SHAPE SYSTEM ============ -->
+<section id="shapes"><div class="wrap">
+  <div class="sec-head"><div class="sec-num">0.0</div><h2>Shape System</h2></div>
+  <p class="sec-fmt">Nine domains · One shape per document</p>
+  <p class="sec-intro">Every long-form cover carries one shape from the tkxel system. The shape is not decorative and is not chosen by preference — it is determined by the document's primary subject. Select a domain to see the cover it produces.</p>
+
+  <div class="body-block">
+    <h3>Cover generator</h3>
+    <div class="gen">
+      <div class="shapegrid" id="grid" role="group" aria-label="Select subject domain"></div>
+      <div>
+        <div class="cover">
+          <svg class="cshape" viewBox="0 0 100 100" aria-hidden="true"><use id="coverShape" href="#s-ai" fill="url(#g)" filter="url(#softbig)"/></svg>
+          <div class="cwm">tkxel<sup style="font-size:7px">®</sup></div>
+          <div class="ctitle" id="coverTitle">Building Production-Grade AI Systems</div>
+          <div class="ceyebrow" id="coverEyebrow" style="order:-1;margin-top:auto">White Paper</div>
+          <div class="cfoot"><span id="coverDomain">AI &amp; Data Innovation</span><span>2026</span></div>
+        </div>
+        <div class="cover-cap">A4 Portrait · 210 × 297mm</div>
+      </div>
+    </div>
+
+    <div class="note"><strong>Selection rule.</strong> Match the shape to the document's primary subject, not its secondary themes. A paper on securing AI workloads is Cybersecurity if the argument is about protection, and AI if the argument is about capability. Decide what the reader takes away, then choose.</div>
+
+    <h3>Rules</h3>
+    <ul class="rules">
+      <li><b>One per document</b><span>No combining, no alternating between chapters. If a topic genuinely needs two shapes, it is two documents.</span></li>
+      <li><b>Placement</b><span>Fixed anchor across all documents in a format. Consistency of position is what makes the set read as a series.</span></li>
+      <li><b>Recurrence</b><span>Cover and chapter openers use the same shape. The shape identifies the document, not the chapter.</span></li>
+      <li><b>No new shapes</b><span>If nothing fits, the subject sits outside tkxel's defined domains — a positioning question, not a design one.</span></li>
+    </ul>
+  </div>
+</div></section>
+
+<div id="sections"></div>
+
+</main>
+
+<script>
+const SHAPES=[
+ {id:"s-ai",name:"AI & Data Innovation",mean:"Universal symbol for AI",title:"Building Production-Grade AI Systems"},
+ {id:"s-cloud",name:"Cloud & Infrastructure",mean:"Four-circle cloud shape",title:"Cloud Cost Control at Scale"},
+ {id:"s-eng",name:"Engineering",mean:"Iteration; feedback loops",title:"Engineering Velocity Without Debt"},
+ {id:"s-adv",name:"Advisory & Strategy",mean:"Conversations & guidance",title:"Choosing an AI Delivery Partner"},
+ {id:"s-cyber",name:"Cybersecurity",mean:"Contained & protected",title:"Securing the AI Supply Chain"},
+ {id:"s-impl",name:"Solution Implementation",mean:"Movement + transition",title:"From Pilot to Production"},
+ {id:"s-opt",name:"Optimization & Quality",mean:"Speed and efficiency",title:"Shipping Faster With Fewer Defects"},
+ {id:"s-engage",name:"Engagement Models",mean:"Partnership",title:"Choosing the Right Engagement Model"},
+ {id:"s-bus",name:"Business Enablement",mean:"Unlocking potential",title:"Enabling Teams to Adopt AI"}
+];
+
+const grid=document.getElementById("grid");
+SHAPES.forEach((s,i)=>{
+  const b=document.createElement("button");
+  b.className="shapebtn";b.setAttribute("aria-pressed",i===0);
+  b.innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#${s.id}" fill="url(#g)" filter="url(#soft)"/></svg>
+    <span class="lab">${s.name}</span><span class="mean">${s.mean}</span>`;
+  b.onclick=()=>{
+    document.querySelectorAll(".shapebtn").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");
+    document.getElementById("coverShape").setAttribute("href","#"+s.id);
+    document.getElementById("coverTitle").textContent=s.title;
+    document.getElementById("coverDomain").textContent=s.name;
+  };
+  grid.appendChild(b);
+});
+
+const SECTIONS=[
+{n:"1.0",id:"s1",t:"White Paper",fmt:"PDF · A4 Portrait · 8–20 pages",
+ intro:"A long-form thought leadership document. It positions tkxel as a subject matter expert and is typically gated mid-to-late funnel. Where a report evidences, a white paper argues.",
+ order:"Cover → Executive Summary → Contents → Body Chapters → Conclusion → About / CTA → Back Cover",
+ file:"tkxel_WhitePaper_TopicName_YYYY-MM_v1.pdf",
+ layout:[["Grid","Two-column body — a wider primary content column and a sidebar for callouts, stats and pull quotes."],
+  ["Margins","20mm all sides. Inner margin to 25mm where binding is anticipated."],
+  ["Measure","65–75 characters per line in the primary column."],
+  ["Chapter openers","Full-page break with title and one-line descriptor. No body copy."],
+  ["Callouts","Always bordered or on a tint — never floating without a container."],
+  ["Figures","Every chart captioned, left-aligned below the graphic, with a source line."]],
+ type:[["Cover Title","display/xl","Tight tracking"],["Chapter Title","heading/01","Opener pages"],["Section Heading","heading/02",""],["Body","body/md","1.5–1.6 line height"],["Pull Quote","display/sm","Sidebar or full width"],["Caption / Source","body/sm","Charts, tables, images"]],
+ visual:"Body pages stay light — long-form reading requires it. Covers and chapter openers carry the shape system and may use color fields or full-bleed imagery. That contrast between opener and body is the document's signature. One accent color for rules, pull-quote bars and chart highlights; never for body text.",
+ do:["Source every statistic consistently","Keep the executive summary to 200–300 words","Caption and source every figure","Date and version the cover"],
+ dont:["Don't run more than two pages of unbroken copy","Don't use imagery as decoration between chapters","Don't leave the sidebar empty for pages at a time","Don't exceed 20 pages — restructure as an E-Book"]},
+
+{n:"2.0",id:"s2",t:"Report",fmt:"PDF · A4 Portrait · 20–60 pages",
+ intro:"Presents original data — survey results, benchmarks, market analysis. The highest-credibility asset tkxel produces, and typically annual or quarterly. Extends the White Paper page architecture rather than replacing it.",
+ order:"Cover → Key Findings → Contents → Methodology → Data Chapters → Implications → About / CTA → Appendix",
+ file:"tkxel_Report_TopicName_YYYY_v1.pdf",
+ layout:[["Key Findings","Before the contents. Five to seven findings, numbered, one line each. Most readers read only this page."],
+  ["Methodology","Mandatory. Sample size, collection window, method, limitations."],
+  ["Chart density","At least one full-width chart per data chapter."],
+  ["Summary bars","Each chapter closes with a 'What this means' band on a tint."],
+  ["Built for reissue","Year as a variable, editable-data chart components, prior editions archived."]],
+ type:[["Finding Number","data/lg","Key Findings page"],["Stat Figure","data/lg","Tabular figures on"],["Stat Label","body/sm","Below the figure"],["Chart Axis","body/sm",""],["Methodology Note","body/sm",""]],
+ visual:"Data visualization is the defining visual element. Eight ordered data colors, color-blind safe and legible in grayscale. Highlight convention: mute the set, accent the one data point carrying the argument. Horizontal gridlines only, legend top-left, no 3D, no pie charts above four segments. Successive editions share layout and change only cover colorway.",
+ do:["Lead with key findings before anything else","State sample size and limitations plainly","Export every chart individually for reuse","Give every figure a caption and source"],
+ dont:["Don't publish without a methodology page","Don't use more than eight colors in one chart","Don't redesign the layout between editions","Don't present a projection as a finding"]},
+
+{n:"3.0",id:"s3",t:"Case Study",fmt:"PDF · A4 Portrait · 1–2 pages",
+ intro:"Proof of value. The highest-converting asset in B2B — a single client engagement told through problem, approach and measured outcome. Where a brochure claims capability, a case study evidences it.",
+ order:"Header (client + sector) → Challenge → Approach → Outcome (metrics) → Technologies → Quote → CTA",
+ file:"tkxel_CaseStudy_ClientName_YYYY-MM_v1.pdf",
+ layout:[["Variants","Two-page full version and a one-page summary. Both required for every engagement."],
+  ["Metrics block","Three metrics maximum, each with a figure, a label and a baseline for comparison."],
+  ["Structure","Challenge / Approach / Outcome in fixed order. Never lead with the approach."],
+  ["Client quote","One only, attributed with name, title and company. Never anonymous unless required by the client."],
+  ["Tech stack","Logo row at normalized optical size, not pasted at native scale."]],
+ type:[["Client Name","heading/01",""],["Sector Label","label/caps","Eyebrow"],["Section Heading","heading/03","Challenge / Approach / Outcome"],["Body","body/md","Short blocks"],["Metric Figure","data/lg","Tabular figures on"],["Quote","display/sm",""]],
+ visual:"Restrained. A case study earns trust through specificity, not styling. Accent color reserved for the metrics block. Client logo appears once, at approved size, with written permission on file. Screenshots use dummy data unless explicitly cleared.",
+ do:["Lead with the client's problem, not tkxel's service","Use real numbers with a stated baseline","Get written client approval before publication","Keep the one-page version genuinely one page"],
+ dont:["Don't publish a client name without approval","Don't use more than three metrics","Don't describe the approach in tooling terms the client wouldn't use","Don't claim outcomes you can't attribute"]},
+
+{n:"4.0",id:"s4",t:"Brochure",fmt:"PDF · A4 · 4–12 pages",
+ intro:"Presents a service line, capability or industry offering. Visual-led and persuasive rather than evidentiary — the asset a salesperson attaches to a first email.",
+ order:"Cover → Positioning Statement → Capability Detail → Proof → Engagement Model → CTA",
+ file:"tkxel_Brochure_ServiceName_YYYY-MM_v1.pdf",
+ layout:[["Grid","Modular two- or three-column. Full-bleed image panels permitted on any page."],
+  ["Margins","15mm all sides — tighter than long-form. This is a visual document."],
+  ["Ratio","Roughly 50/50 image to text. A dense brochure has become a white paper."],
+  ["Rhythm","Alternate image-led and text-led spreads. Never three consecutive text pages."],
+  ["Proof block","Client logos, metrics or a case snapshot. Every brochure carries one."]],
+ type:[["Cover Title","display/xl",""],["Positioning Statement","display/sm","One paragraph maximum"],["Body","body/md","60 words per block maximum"],["Feature Label","label/caps","Capability lists"],["Stat Figure","data/lg","Proof block"],["CTA","heading/03",""]],
+ visual:"Photography-forward — the format where imagery carries most weight. Real work, real people, real environments. Full-bleed permitted on covers and section openers. Color fields may back short text. Any photograph carrying type uses a defined scrim so contrast holds.",
+ do:["Keep body copy in short scannable blocks","Include at least one proof element","Alternate visual and text-led pages","End on one clear call to action"],
+ dont:["Don't exceed 12 pages — split by service line","Don't use stock handshakes or abstract circuitry","Don't set text on an untreated photograph","Don't list every capability — this is a door opener"]},
+
+{n:"5.0",id:"s5",t:"Deck",fmt:"PDF / PPTX · 16:9 · 10–30 slides",
+ intro:"A deck is presented, not read. It supports a speaker in a room or on a call. Capability, pitch and webinar decks share this system.",
+ order:"Cover → Agenda → Section Dividers → Content → Proof / Case → CTA → Q&A → Appendix",
+ file:"tkxel_Deck_ClientOrTopic_YYYY-MM_v1.pdf",
+ layout:[["Canvas","1920 × 1080. 12 columns, 96px margins, 24px gutters."],
+  ["One idea per slide","If the headline needs an 'and', it is two slides."],
+  ["Headlines assert","'Our Process' is a label. 'Ship in six weeks, not six months' is an assertion."],
+  ["Body copy","40 words per slide maximum."],
+  ["Minimum type","18pt. Nothing smaller appears on a slide, ever."],
+  ["Appendix","Behind the Q&A slide, never in the main flow."]],
+ type:[["Cover Title","display/xl",""],["Slide Headline","heading/01","The assertion"],["Sub-headline","heading/03","One line, optional"],["Body","body/lg","18pt minimum"],["Stat Figure","data/lg",""],["Source","body/sm","14pt minimum even here"]],
+ visual:"Dark is the default for covers, dividers and statement slides; light for dense tables and printed leave-behinds. Switch modes only at section breaks, never mid-section. Assume poor projection conditions — mid-tone on mid-tone fails on a projector even when it passes on a monitor.",
+ do:["Write headlines as statements","Keep one message per slide","Move detail to the appendix","Build a five-slide short version"],
+ dont:["Don't paste a paragraph onto a slide","Don't go below 18pt for any reason","Don't alternate light and dark at random","Don't use transitions beyond a simple fade"]},
+
+{n:"6.0",id:"s6",t:"Checklist",fmt:"PDF · A4 Portrait · 1–2 pages",
+ intro:"A quick-reference utility tool that helps a prospect do something specific. Short, scannable, action-oriented — the highest value-per-page asset in the system.",
+ order:"Header → Intro line → Grouped items → Interpretation → Footer with URL",
+ file:"tkxel_Checklist_TopicName_YYYY-MM_v1.pdf",
+ layout:[["Grid","Single column. Two-column only at 12+ items."],
+  ["Margins","18mm all sides. Consistent left indent — no variation between items."],
+  ["Checkbox","Square outline, 14 × 14px, aligned to the first line of multi-line items."],
+  ["Grouping","Three to five groups, four to eight items each. Never one flat list of thirty."],
+  ["Spacing","10–12px between items, 20–24px between groups."],
+  ["Phrasing","Action phrases under 15 words. Every item starts with a verb, or every item is a yes/no assertion — never mixed."],
+  ["Interpretation","Closes the checklist: 'If you checked fewer than six, start here.' This turns a list into advice."]],
+ type:[["Page Title","heading/01","Below the logo"],["Intro Line","body/lg","One sentence only"],["Group Label","label/caps","Category header"],["Checklist Item","body/md","Primary reading text"],["Interpretation","body/md","Tinted block"],["Footer URL","body/sm",""]],
+ visual:"White page. No full-bleed color — it must print without wasting ink. A branded header strip is the only heavy color element. Group labels in accent text or a thin accent rule. Checkboxes outlined in neutral dark gray, never pre-filled. No photography, patterns or ornament — checklists are utility documents.",
+ do:["Keep items to short action phrases","Group related items under clear labels","Test that it prints in black and white","Close with an interpretation block"],
+ dont:["Don't add backgrounds that waste printer ink","Don't exceed 20 items on a page","Don't mix checkbox styles in one document","Don't split a group across a page break"]},
+
+{n:"7.0",id:"s7",t:"E-Book",fmt:"PDF · Portrait or Landscape · 20–60 pages",
+ intro:"Long-form, design-led educational content. Where a white paper argues a position and a report presents data, an e-book teaches a subject end to end. The most visually produced document in the system.",
+ order:"Cover → Contents → Introduction → Chapters → Key Takeaways → About / CTA → Back Cover",
+ file:"tkxel_eBook_TopicName_YYYY-MM_v1.pdf",
+ layout:[["Orientation","Portrait for print or desktop reading at length; landscape for screen-first, image-heavy content. One per title — never mixed."],
+  ["Grid","Modular 12-column. Chapter openers full-bleed, body single or double column by orientation."],
+  ["Margins","20mm portrait / 40px landscape."],
+  ["Chapter openers","Full page: number, title, one-line descriptor, supporting visual. These carry the document's pacing."],
+  ["Visual density","Every spread carries at least one non-text element."],
+  ["Takeaways","Each chapter closes with three to five bulleted takeaways on a tint."]],
+ type:[["Cover Title","display/xl",""],["Chapter Number","data/lg","Opener pages"],["Chapter Title","heading/01",""],["Body","body/md","1.6 line height"],["Takeaway Item","body/md","Tinted block"],["Caption","body/sm",""]],
+ visual:"Chapter openers may use full color fields or full-bleed imagery — this is where an e-book differs from a white paper, in visual pacing. Illustration over photography for conceptual content, and one illustration style held throughout; mixing styles is the fastest way to make a long document look assembled rather than designed.",
+ do:["Give every chapter a full-page opener","Close each chapter with key takeaways","Hyperlink the contents page","Hold one illustration style throughout"],
+ dont:["Don't mix portrait and landscape in one title","Don't mix illustration styles across chapters","Don't let a spread run with no visual element","Don't exceed 60 pages — split into a series"]},
+
+{n:"8.0",id:"s8",t:"Social Media",fmt:"PNG / JPG / MP4 · Multiple ratios",
+ intro:"Distributes everything above and builds presence between campaigns. LinkedIn is the primary platform; all specifications are LinkedIn-first with adaptations noted.",
+ order:"Carousel: Frame 1 hook and title → Frames 2–N−1 content → Final frame CTA",
+ file:"tkxel_Social_Platform_Type_TopicName_v1.png",
+ layout:[["Square (1:1)","1080 × 1080 — feed posts, general content"],
+  ["Portrait (4:5)","1080 × 1350 — higher visibility on mobile"],
+  ["Landscape (1.91:1)","1200 × 628 — link preview cards"],
+  ["Vertical (9:16)","1080 × 1920 — stories and reels"],
+  ["Safe zone","All critical text and logos 80px from every edge."],
+  ["Hierarchy","One dominant element per frame. Never two competing."],
+  ["Logo","Consistent position across all posts — never repositioned by layout preference."],
+  ["Minimum type","32px on a 1080 canvas. Feeds are read on phones."]],
+ type:[["Post Headline","display/sm","Dominant text"],["Supporting Line","body/lg","Short sub-line"],["Stat / Number","data/lg","Stat posts"],["Carousel Body","body/md","Content frames"],["CTA Frame","heading/02","Final frame"],["Source / Credit","body/sm","Bottom corner"]],
+ visual:"Brand color fields are the default background; photography permitted with a defined scrim. One accent per post — multiple accents across a carousel break series cohesion. Background treatment, type scale and logo position identical across all frames of a carousel. Motion, where used, runs 3–6 seconds, single loop, ease-in-out, with a static fallback.",
+ do:["Keep critical content inside the safe zone","Make frame 1 work as a standalone image","Source every statistic on the graphic itself","Write alt text for every published asset"],
+ dont:["Don't go below 32px type on a 1080 canvas","Don't change background treatment mid-carousel","Don't fill a frame with paragraph text","Don't reposition the logo per layout"]}
+];
+
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const host=document.getElementById("sections");
+
+host.innerHTML=SECTIONS.map(s=>`
+<section id="${s.id}"><div class="wrap">
+  <div class="sec-head"><div class="sec-num">${s.n}</div><h2>${s.t}</h2></div>
+  <p class="sec-fmt">${s.fmt}</p>
+  <p class="sec-intro">${s.intro}</p>
+  <div class="body-block">
+    <h3>Structure</h3>
+    <ul class="rules">
+      <li><b>Order</b><span>${s.order}</span></li>
+      <li><b>File naming</b><span style="font-family:var(--mono);font-size:12.5px">${s.file}</span></li>
+    </ul>
+
+    <h3>Layout</h3>
+    <ul class="rules">${s.layout.map(r=>`<li><b>${r[0]}</b><span>${r[1]}</span></li>`).join("")}</ul>
+
+    <h3>Type styles</h3>
+    <table><thead><tr><th>Element</th><th>Token</th><th>Notes</th></tr></thead><tbody>
+    ${s.type.map(r=>`<tr><td>${r[0]}</td><td><code>${r[1]}</code></td><td>${r[2]||"—"}</td></tr>`).join("")}
+    </tbody></table>
+
+    <h3>Visual &amp; color</h3>
+    <p style="color:var(--ink-2);max-width:620px">${s.visual}</p>
+
+    <h3>Do &amp; Don't</h3>
+    <div class="dd">
+      <div class="do"><h4>Do</h4><ul>${s.do.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      <div class="dont"><h4>Don't</h4><ul>${s.dont.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    </div>
+  </div>
+</div></section>`).join("")+`
+
+<section id="s9"><div class="wrap">
+  <div class="sec-head"><div class="sec-num">9.0</div><h2>Usage &amp; Governance</h2></div>
+  <p class="sec-fmt">Applies to every format above</p>
+  <div class="body-block">
+    <h3>Shared standards</h3>
+    <ul class="rules">
+      <li><b>File naming</b><span style="font-family:var(--mono);font-size:12.5px">tkxel_[Type]_[Topic]_[YYYY-MM]_v[N].[ext]</span></li>
+      <li><b>Spelling</b><span>US English throughout. "White Paper" is set as two words in all body copy, headings and navigation; filenames close it up as <code style="font-family:var(--mono);font-size:12px">WhitePaper</code> because filenames carry no spaces.</span></li>
+      <li><b>Version &amp; date</b><span>On every cover. An undated document circulating two years later will be read as current.</span></li>
+      <li><b>Sourcing</b><span>Every statistic carries a source: <em>Source: [Organization], [Year].</em></span></li>
+      <li><b>Accessibility</b><span>WCAG 2.1 AA. Body text 4.5:1, large text 3:1. Alt text on every image and chart. PDFs exported tagged, reading order set, live text — never outlined.</span></li>
+      <li><b>Confidentiality</b><span>Client-specific proposals and pitch decks carry a confidentiality mark in the footer.</span></li>
+      <li><b>Screenshots</b><span>Dummy data only. No real client names or figures without written approval.</span></li>
+    </ul>
+
+    <h3>Export settings</h3>
+    <table><thead><tr><th>Format</th><th>Export</th><th>Settings</th></tr></thead><tbody>
+      <tr><td>White Paper, Report, E-Book</td><td>PDF</td><td>Tagged, hyperlinked contents, 300dpi imagery</td></tr>
+      <tr><td>Case Study, Brochure</td><td>PDF</td><td>Tagged, 300dpi, bleed if printed</td></tr>
+      <tr><td>Deck</td><td>PDF</td><td>1× ; PPTX where required — see below</td></tr>
+      <tr><td>Checklist</td><td>PDF</td><td>Tagged; test-print in black and white</td></tr>
+      <tr><td>Social</td><td>PNG</td><td>2×, one file per frame</td></tr>
+      <tr><td>Charts (standalone)</td><td>SVG</td><td>Individual export for reuse</td></tr>
+    </tbody></table>
+
+    <h3>Pre-publish checklist</h3>
+    <ul class="qa">
+      <li>Proofread by someone other than the author</li>
+      <li>Every statistic sourced</li>
+      <li>Version and date correct on the cover</li>
+      <li>Client and partner logos current and approved</li>
+      <li>Screenshots use dummy data</li>
+      <li>Confidentiality mark applied where required</li>
+      <li>Alt text written for all images and charts</li>
+      <li>Contrast checked against AA</li>
+      <li>All links tested</li>
+      <li>No placeholder text — search "Lorem", "TBD", "XX"</li>
+      <li>Filename follows convention</li>
+      <li>Exported at the settings above</li>
+    </ul>
+
+    <div class="note"><strong>Editable formats.</strong> Decks are the exception to PDF-only distribution. Either a maintained PPTX template mirrors this system, or decks are PDF-only and edits route through design. This must be decided and stated — the undecided state is what causes brand drift.</div>
+
+    <h3>Ownership</h3>
+    <ul class="rules">
+      <li><b>System owner</b><span style="color:var(--ink-3)">[Name, role]</span></li>
+      <li><b>Requests</b><span style="color:var(--ink-3)">[Channel or form]</span></li>
+      <li><b>Turnaround</b><span style="color:var(--ink-3)">[X working days]</span></li>
+      <li><b>Approval required</b><span>New templates, any deviation from these guidelines, client-facing assets using client logos</span></li>
+      <li><b>Review cadence</b><span>Quarterly template audit; annual full review. Tagline reviewed at 24 months.</span></li>
+    </ul>
+
+    <div class="note"><strong>When the guidelines don't fit.</strong> If a required asset has no template here, that is a gap in the system, not a licence to improvise. Route it to the system owner — improvised assets are the primary cause of brand decay.</div>
+
+    <h3>Open decisions</h3>
+    <div class="open"><ol>
+      <li>Is PPTX parity required for decks, or is PDF-only enforceable?</li>
+      <li>Are any of these formats ever physically printed? If not, drop CMYK and bleed entirely.</li>
+      <li>What is the position on AI-generated imagery in collateral?</li>
+      <li>Is motion in scope for social in v1?</li>
+      <li>Does the accent blue pass AA on white at body size — and if not, what is the substitute for small text?</li>
+      <li>Who owns approval, and what is the turnaround SLA?</li>
+    </ol></div>
+  </div>
+</div></section>`;
+
+// scrollspy
+const links=[...document.querySelectorAll(".navlist a")];
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.toggle("on",l.getAttribute("href")==="#"+e.target.id));
+    }
+  });
+},{rootMargin:"-10% 0px -75% 0px"});
+document.querySelectorAll("section[id]").forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
