@@ -1,5 +1,5 @@
 :root{
-  --ink:#0A0A0B;
+  --ink:#2c2c2c;
   --ink-2:#4A4A50;
   --ink-3:#8B8B93;
   --line:#E3E3E6;
@@ -13,7 +13,12 @@
   --green:#1B7A4B;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
   --sans:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;
-  --ui:"Inter",system-ui,-apple-system,sans-serif;
+  --ui:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;
+
+  /* one type scale, shared by the fluid slide canvas and the long-form document sections */
+  /* h2 itself carries the heading size now (see the h2 rule) — no separate token to drift out of sync */
+  --fs-body-fluid:clamp(12px,.84vw,16px); /* body copy inside the 16:9 slide canvas */
+  --fs-body:16px;                       /* body copy in ordinary (non-slide) document flow */
 }
 
 
@@ -22,20 +27,23 @@ html{scroll-behavior:smooth;scroll-padding-top:32px;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 body{
   font-family:var(--sans);background:var(--paper);color:var(--ink);
-  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  font-size:12.09px;line-height:1.6;-webkit-font-smoothing:antialiased;
   overflow-x:hidden;max-width:100vw;
 }
 .mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;font-size:10.5px;color:var(--ink-3)}
 
-/* ---------- body layout: sticky left nav rail + scrolling content column ---------- */
-.layout{display:flex;align-items:flex-start}
+/* ---------- body layout: fixed left nav rail + independently scrolling content pane ---------- */
+/* .layout locks to exactly one viewport height; the rail never moves, and .content */
+/* gets its own internal scrollbar — scrolling the page only carries you through the hero. */
+.layout{display:flex;align-items:stretch;height:100dvh}
+@supports not (height:100dvh){.layout{height:100vh}}
 .rail{
-  width:340px;flex-shrink:0;align-self:stretch;
-  position:sticky;top:0;height:100dvh;overflow-y:auto;
-  border-right:1px solid var(--line);padding:28px 0 20px;
+  width:200px;flex-shrink:0;
+  height:100%;overflow-y:visible;
+  border-right:1px solid rgba(227,227,230,.5);padding:28px 0 20px;
   display:flex;flex-direction:column;background:var(--paper);font-family:var(--ui);z-index:10;
 }
-.rail-list{list-style:none;overflow-y:auto;padding:12px 0;flex:1}
+.rail-list{list-style:none;overflow-y:visible;padding:12px 0;flex:1}
 .rail-list a{
   display:flex;gap:10px;align-items:baseline;padding:6px 24px;
   text-decoration:none;color:var(--ink-2);font-size:13.5px;
@@ -48,18 +56,21 @@ body{
 .rail-list .grp{padding:14px 24px 5px;font-family:var(--mono);font-size:9px;letter-spacing:.11em;color:var(--ink-3);text-transform:uppercase}
 .rail-list li:first-child.grp{padding-top:0}
 .rail-foot{padding:14px 24px 0;border-top:1px solid var(--line);font-family:var(--mono);font-size:9px;letter-spacing:.09em;color:var(--ink-3);line-height:1.7}
-.content{flex:1;min-width:0}
+.rail-foot a,.slide-foot a{color:inherit;text-decoration:none;transition:color .15s}
+.rail-foot a:hover,.slide-foot a:hover{color:var(--blue)}
+.doc-slide-dark .slide-foot a:hover{color:#fff}
+.content{flex:1;min-width:0;height:100%;overflow-y:auto;scroll-behavior:smooth;scroll-padding-top:24px}
+@media(prefers-reduced-motion:reduce){.content{scroll-behavior:auto}}
 @media(max-width:900px){
-  .layout{flex-direction:column}
-  .rail{position:static;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  /* split-pane locking doesn't work on small screens — fall back to normal stacked scrolling */
+  .layout{flex-direction:column;height:auto}
+  .rail{width:100%;height:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
   .rail-list{max-height:220px}
+  .content{height:auto;overflow-y:visible}
 }
 
 /* ---------- layout ---------- */
 main{margin-left:0}
-.wrap{max-width:880px;padding:0 64px}
-section{border-bottom:1px solid var(--line);padding:88px 0}
-section:last-child{border-bottom:0}
 
 /* ---------- slide canvas: every full-page slide is a 1920x1080 (16:9) frame that ---------- */
 /* scales fluidly with viewport width, and drops the fixed ratio on short/narrow screens */
@@ -82,7 +93,7 @@ section:last-child{border-bottom:0}
 .hero-top .logo-lockup{height:clamp(20px,1.7vw,32px);width:auto;display:block}
 
 .hero-title{
-  font-size:clamp(40px,8.75vw,168px);line-height:.86;letter-spacing:-.045em;
+  font-size:clamp(60px,18vw,240px);line-height:.86;letter-spacing:-.045em;
   font-weight:800;margin:0;padding:clamp(60px,16.9vw,325px) clamp(24px,3vw,58px) clamp(10px,1vw,20px);position:relative;z-index:3;
 }
 
@@ -101,19 +112,21 @@ section:last-child{border-bottom:0}
 .bleed-slide img{width:100%;height:auto;display:block}
 
 /* ---------- mission slide (text page, matches hero's blob treatment) ---------- */
+/* text block sits right-aligned, vertically centered, with one clean gap from the right edge */
 .mission-slide{
   position:relative;overflow:hidden;display:flex;flex-direction:column;
-  justify-content:center;border-bottom:1px solid var(--line);
+  justify-content:center;align-items:flex-end;border-bottom:1px solid var(--line);
+  padding-right:clamp(24px,6vw,110px);
   background-image:url("assets%20/Brandbook-3bg.png");
   background-size:cover;background-position:left center;background-repeat:no-repeat;background-color:var(--paper);
 }
-.mission-body{position:relative;z-index:2;max-width:800px;margin-left:auto;padding:0 clamp(24px,4.7vw,90px);display:flex;flex-direction:column;gap:clamp(18px,1.9vw,36px)}
-.mission-body p{font-size:clamp(13px,1.15vw,22px);line-height:1.55;color:var(--ink);letter-spacing:-.01em}
+.mission-body{position:relative;z-index:2;max-width:600px;width:100%;display:flex;flex-direction:column;gap:clamp(18px,1.9vw,36px)}
+.mission-body p{font-size:16px;font-weight:300;line-height:1.55;color:var(--ink);letter-spacing:-.01em}
 
 /* shared full-page slide footer (Version / Brand Book / tkxel.com) */
 .slide-foot{
   position:absolute;bottom:clamp(16px,1.8vw,34px);left:0;right:0;z-index:2;display:flex;justify-content:space-between;
-  padding:0 clamp(24px,3.3vw,64px);font-family:var(--mono);font-size:clamp(8px,.52vw,10px);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  padding:0 clamp(24px,3.3vw,64px);font-family:var(--mono);font-size:clamp(8px,.52vw,10px);letter-spacing:.12em;color:var(--ink-3);
 }
 
 /* ---------- doc slide (guideline content, one idea per slide) ---------- */
@@ -128,33 +141,148 @@ section:last-child{border-bottom:0}
 .doc-content{max-width:880px}
 .doc-content-wide{max-width:none}
 .doc-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
-.doc-title{font-size:clamp(24px,2.6vw,50px);font-weight:800;letter-spacing:-.03em;line-height:1}
-.doc-fmt{font-family:var(--mono);font-size:clamp(9px,.57vw,11px);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
-.doc-intro{margin-top:clamp(14px,1.35vw,26px);color:var(--ink-2);font-size:clamp(13px,.89vw,17px);line-height:1.55}
-.doc-body{margin-top:clamp(20px,2.1vw,40px)}
-.doc-h3{font-size:clamp(16px,1.15vw,22px);font-weight:700;letter-spacing:-.015em;margin:0 0 16px;color:var(--ink)}
-.doc-text{color:var(--ink-2);font-size:clamp(13px,.89vw,17px);line-height:1.55}
-.doc-text+.doc-text{margin-top:20px}
+/* the format kicker moves out of the heading line and up into the slide's own top-left corner — */
+/* part of the page header, mirroring .doc-slide-num pinned opposite it at top-right */
+.doc-fmt{
+  position:absolute;top:clamp(20px,2.1vw,40px);left:clamp(24px,3.3vw,64px);
+  font-family:var(--mono);font-size:clamp(9px,.57vw,11px);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);
+}
+/* explicit rather than inherited, so this can't drift from the rest of the document — */
+/* .mission-body p is the one deliberate exception to this typeface elsewhere in the deck */
+.doc-intro{color:var(--ink-2);font-family:var(--sans);font-size:var(--fs-body-fluid);line-height:1.55}
+.doc-body{margin-top:clamp(8px,.9vw,16px)}
+.doc-h3{font-size:clamp(16px,1.15vw,22px);font-weight:500;letter-spacing:-.015em;margin:18px 0 12px;color:var(--blue-deep)}
+.doc-text{color:var(--ink-2);font-size:var(--fs-body-fluid);line-height:1.55;max-width:700px}
+/*.doc-text+.doc-text{margin-top:20px}*/
 
 /* shape names reference slide (two-column: copy left, 3x3 shape grid right) */
-.sn-layout{display:flex;gap:clamp(24px,4.5vw,96px);align-items:center}
-.sn-copy{width:400px;max-width:34%;flex:1 1 280px;display:flex;flex-direction:column;gap:20px;min-width:0}
-.sn-copy p{color:var(--ink-2);font-size:14px;line-height:1.55}
-.namegrid{flex:2 1 480px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);min-width:0}
-.namecard{padding:20px 20px;display:flex;flex-direction:column;align-items:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sn-copy{display:flex;flex-direction:column;}
+.sn-copy p{color:var(--ink-2);font-size:var(--fs-body-fluid);line-height:1.55}
+.namegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line)}
+.namecard{padding:clamp(12px,1.6vw,26px) clamp(10px,1.4vw,20px);display:flex;flex-direction:column;align-items:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 .namecard:nth-child(3n){border-right:0}
 .namecard:nth-last-child(-n+3){border-bottom:0}
-.namecard svg,.namecard img{width:250px;height:250px;object-fit:contain;display:block}
-.namecard-row{display:flex; flex-direction:row;align-items:flex-start;margin-top:16px;width:100%;gap:10pt;}
-.namecard-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;font-weight:500;color:var(--ink);white-space:nowrap;padding-top:1px}
-.namecard-desc{font-size:10px;line-height:1.45;color:var(--ink-3)}
+.namecard svg,.namecard img{width:clamp(44px,5.2vw,92px);height:clamp(44px,5.2vw,92px);object-fit:contain;display:block}
+.namecard-row{display:flex;flex-direction:row;align-items:flex-start;margin-top:clamp(8px,1.1vw,16px);width:100%;gap:10px}
+.namecard-label{font-family:var(--mono);font-size:clamp(9px,.62vw,10.5px);letter-spacing:.06em;font-weight:500;color:var(--ink);white-space:nowrap;padding-top:1px}
+.namecard-desc{font-size:clamp(8px,.56vw,10px);line-height:1.45;color:var(--ink-3)}
+
+/* image styling reference slide: a live example of the standard blue gradient overlay, */
+/* the same treatment used on the hero and mission-slide photos, applied over a real photo */
+.img-demo{position:relative;overflow:hidden;border-radius:4px;flex:1;min-height:0}
+.img-demo img{width:100%;height:100%;object-fit:cover;display:block}
+.img-demo::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(150deg,rgba(18,58,174,.82) 0%,rgba(27,75,214,.5) 46%,rgba(46,99,239,.22) 100%);
+}
+.img-demo-label{
+  position:absolute;bottom:clamp(10px,1.2vw,18px);left:clamp(12px,1.4vw,20px);z-index:2;
+  color:#fff;font-size:clamp(8px,.55vw,10px);letter-spacing:.09em;
+}
+
+/* iconography reference slide: a dense, borderless grid of sample line icons pulled from the */
+/* Material Symbols plugin — a library sheet, not individually framed swatches. The grid fills */
+/* the full slide height on its side, so #iconography's own content column stretches top to */
+/* bottom instead of the shared .sn-layout center-alignment used by the other two-column slides */
+#iconography .doc-content{display:flex;flex-direction:column;height:100%}
+#iconography .doc-body{display:flex;flex-direction:column;flex:1;min-height:0}
+#iconography .sn-layout{flex:1;/*align-items:stretch;*/min-height:0}
+/* overflow:hidden is the safety net — without it, a flex item's default min-height:auto lets */
+/* its content (20+ grid rows) impose its own minimum and spill past the slide's fixed height, */
+/* covering whatever sits below (the footer). min-height:0 + grid-auto-rows:1fr is the actual */
+/* fix: it makes the grid respect the space it's been given and divide it evenly instead */
+.icon-panel{flex:1;min-width:0;display:flex;flex-direction:column;align-self:stretch;min-height:0;overflow:hidden}
+.icongrid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(11,1fr);grid-auto-rows:1fr;gap:clamp(4px,.6vw,10px)}
+.iconcard{display:flex;align-items:center;justify-content:center;color:var(--ink);min-height:0;overflow:hidden}
+.iconcard svg{width:clamp(11px,1.1vw,18px);height:clamp(11px,1.1vw,18px);flex-shrink:0}
+/* the plugin panel itself, shown as evidence of where these values (Sharp, Fill off, 24dp) come from */
+.icon-plugin-ref{margin-top:clamp(12px,1.5vw,22px)}
+.icon-plugin-ref img{
+  width:100%;max-width:220px;display:block;border-radius:6px;
+  border:1px solid var(--line);
+}
+.icon-plugin-label{margin-top:8px;font-size:clamp(8px,.55vw,10px)}
+
+/* White Paper structure slide: three real cover examples, side by side */
+/* covers carousel: the viewport scrolls natively (with snap), the two arrow buttons just call */
+/* scrollBy one viewport-width at a time — no manual page/translateX bookkeeping needed, and it */
+/* works unchanged whether there are 3 covers (nothing to scroll, arrows disable themselves) */
+/* or 30. Native scrollbar is hidden since the arrows are the intended control. */
+.wp-covers-wrap{display:flex;align-items:center;gap:8px}
+.wp-covers-viewport{
+  flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;
+  scroll-behavior:smooth;scroll-snap-type:x mandatory;scrollbar-width:none;
+}
+.wp-covers-viewport::-webkit-scrollbar{display:none}
+.wpc-arrow{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font-size:15px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:border-color .15s,color .15s;
+}
+.wpc-arrow:hover{border-color:var(--blue);color:var(--blue)}
+.wpc-arrow:disabled{opacity:.3;cursor:default;pointer-events:none}
+/* stacked cover treatments (Deck, Social Media) scroll vertically within their own column — */
+/* the paging arrows are a horizontal-row control, so they don't apply there */
+.wp-covers-wrap:has(.wp-covers-landscape) .wpc-arrow,.wp-covers-wrap:has(.wp-covers-wide) .wpc-arrow{display:none}
+
+.wp-covers{display:flex;gap:clamp(2px,0.4vw,2px)}
+.wp-covers img{
+  flex:0 0 calc((100% - 2*clamp(10px,1.3vw,20px))/3);min-width:0;aspect-ratio:1236/1750;object-fit:cover;
+  display:block;border-radius:4px;border:1px solid var(--line);scroll-snap-align:start;
+}
+/* dummy cover art for formats without a real example yet — same slot/size as a real cover, */
+/* swap for an actual <img> (see White Paper's 1.1) once one exists */
+.wp-covers .cover-placeholder{
+  flex:0 0 calc((100% - 2*clamp(10px,1.3vw,20px))/3);min-width:0;aspect-ratio:1236/1750;border-radius:4px;border:1px dashed var(--line);
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;scroll-snap-align:start;
+  background-image:linear-gradient(45deg,var(--line-2) 25%,transparent 25%),linear-gradient(-45deg,var(--line-2) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--line-2) 75%),linear-gradient(-45deg,transparent 75%,var(--line-2) 75%);
+  background-size:14px 14px;background-position:0 0,0 7px,7px -7px,-7px 0;
+}
+.wp-covers .cover-placeholder span{font-family:var(--mono);font-size:clamp(7px,.5vw,9px);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+/* Deck covers are 16:9 slides, not A4 portrait — stacked rather than side by side, since */
+/* three landscape tiles in a row would run far wider than the column has room for */
+/* flex:none instead of the inherited flex:1 — landscape covers hold their own 16:9 proportions */
+/* at the column's width instead of being stretched taller to fill whatever space is available */
+.wp-covers-landscape{flex-direction:column}
+.wp-covers-landscape img,.wp-covers-landscape .cover-placeholder{aspect-ratio:16/9;flex:none;width:100%}
+/* the viewport itself takes on the 16:9 ratio (at its own width), so exactly one slide is */
+/* ever in view — the rest of the deck sits below, reachable by scrolling/snapping past it, */
+/* not by the left/right arrows (hidden for this layout, see .wpc-arrow rule above) */
+.wp-covers-wrap:has(.wp-covers-landscape) .wp-covers-viewport{
+  position:relative;
+  aspect-ratio:16/9;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;
+  scrollbar-width:thin;
+}
+.wp-covers-wrap:has(.wp-covers-landscape) .wp-covers-viewport::-webkit-scrollbar{display:block;width:6px}
+.wp-covers-wrap:has(.wp-covers-landscape) .wp-covers-viewport::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+/* up/down controls — always visible (not hover-only) for as long as there's somewhere left */
+/* to scroll: down shows on every slide except the last, up shows on every slide except the */
+/* first, same idea as the left/right .wpc-arrow buttons but for a vertical layout */
+.wpc-vscroll{
+  position:absolute;left:50%;transform:translateX(-50%);z-index:5;
+  width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
+  background:#fff;color:var(--ink);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
+  transition:border-color .15s,color .15s;
+}
+.wpc-vscroll:hover{border-color:var(--blue);color:var(--blue)}
+.wpc-vscroll:disabled{display:none}
+.wpc-vscroll svg{width:14px;height:14px}
+.wpc-up{top:8px}
+.wpc-down{bottom:8px}
+/* social carousel exports are wide strips (~4:1), not A4 covers — same non-stretch treatment */
+/* as Deck: stacked, held at their own proportions, never grown to fill the column's height */
+.wp-covers-wide{flex-direction:column}
+.wp-covers-wide img{aspect-ratio:4/1;flex:none;width:100%;object-fit:contain;border:1px solid var(--line);border-radius:4px}
+@media(max-width:900px){.wp-covers{flex-direction:column}}
 
 /* dark variant */
 .doc-slide-dark{
   background:linear-gradient(150deg,#123AAE 0%,#1B4BD6 46%,#2E63EF 100%);
   border-bottom-color:#123AAE;color:#fff;
 }
-.doc-slide-dark .doc-title{color:#fff}
+.doc-slide-dark h2{color:#fff;border-bottom-color:#fff}
 .doc-slide-dark .doc-fmt{color:rgba(255,255,255,.65)}
 .doc-slide-dark .doc-slide-num{color:rgba(255,255,255,.75)}
 .doc-slide-dark .sn-copy p{color:rgba(255,255,255,.82)}
@@ -167,10 +295,187 @@ section:last-child{border-bottom:0}
   .sn-layout{flex-direction:column}
   .sn-copy{width:100%}
 }
+
+/* section title/divider slide — dark cover for each collateral format: mini-contents list */
+/* pinned to the top, the big format title anchored to the bottom; no footer or rule on these */
+/* the flat gradient is replaced with the real cover photo — overrides .doc-slide-dark's */
+/* background here only, so the Shape Names dark slide (also .doc-slide-dark) keeps its gradient */
+.divider-slide{
+  background-image:url("assets%20/cover.png");
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+}
+.divider-slide .doc-content{height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.divider-slide .doc-head{margin-top:0}
+.divider-slide .slide-foot{display:none}
+.divider-list{list-style:none;margin-top:clamp(14px,1.6vw,28px);display:flex;flex-direction:column;gap:clamp(4px,.5vw,8px)}
+.divider-list li{display:flex;align-items:baseline;gap:14px}
+.divider-num{font-family:var(--mono);font-size:clamp(11px,.78vw,14px);color:rgba(255,255,255,.55)}
+.divider-label{font-size:clamp(14px,1.15vw,19px);font-weight:600;color:#fff}
+
+/* ---------- shared two-column slide layout ---------- */
+/* Typography (3.0) is the reference point: one rule drives gap + column widths for every */
+/* left-content / right-visual slide, so they can't drift apart into separate numbers again */
+.typo-layout,.sn-layout,.nl-showcase{display:flex;gap:clamp(40px,10vw,10px);align-items:center}
+.typo-left,.sn-copy,.nl-copy{width:clamp(240px,28vw,400px);flex-shrink:0}
+.typo-usage,.namegrid,.nl-mock{flex:1;min-width:0}
+.typo-usage-title{
+  font-size:clamp(11px,.8vw,14px);font-weight:700;letter-spacing:-.01em;
+  text-transform:uppercase;color:var(--ink);margin:0 0 clamp(16px,2vw,28px);
+}
+.typo-blue{color:var(--blue)}
+.typo-row{display:flex;flex-direction: column; align-items:flex-start}
+/* the "For Digital Assets" row's first callout sits below its image via position:absolute, */
+/* which normal layout flow can't see — this margin reserves room for it so nothing overlaps */
+.typo-row:has(.typo-callout-below){margin-bottom:clamp(28px,4vw,52px)}
+.typo-row-label{flex-shrink:0;padding-top:4px}
+/* no reserved right padding — the two .typo-callout-right labels are absolutely positioned and */
+/* don't need the box widened to fit them, and this way the group's own width is exactly the two */
+/* images + gap, nothing more, so the divider below can match it exactly */
+.typo-figma-group{display:flex;gap:clamp(28px,4vw,56px);min-width:0}
+.typo-figma-item{position:relative;flex-shrink:0}
+.typo-figma-item img{
+  display:block;height:clamp(90px,13vw,180px);width:auto;}
+/* red circle markers, dropped directly on the exact UI control each callout refers to — */
+/* positioned as a percentage of the item's own box, so they scale and stay put with the image */
+.typo-circle{
+  position:absolute;transform:translate(-50%,-50%);
+  width:clamp(20px,2.4vw,34px);height:clamp(20px,2.4vw,34px);border-radius:50%;
+  border:1.5px solid var(--red);pointer-events:none;
+}
+.typo-callout{
+  font-size:clamp(8px,.55vw,10.5px);line-height:1.4;color:var(--red);
+  white-space:nowrap;
+}
+.typo-callout-below{position:absolute;top:calc(100% + 6px);left:0;max-width:130px;white-space:normal}
+.typo-callout-right{position:absolute;left:calc(100% + 10px);width:clamp(90px,10vw,150px);white-space:normal;transform:translateY(-50%)}
+/* the "For Web" callout is a normal flex sibling, aligned to sit level with the code block */
+/* (its image-equivalent) rather than centered on the whole row, which drifted once the row */
+/* had a label above it too */
+.typo-callout-inline{flex-shrink:0;width:clamp(90px,10vw,150px);align-self:flex-start;margin-top:clamp(10px,1.3vw,18px)}
+/* sized to track the two images + gap above it exactly (both images share the same height */
+/* clamp, so their combined rendered width scales predictably with viewport) — not the wider */
+/* code-block width, so the rule stops exactly where the images end */
+.typo-divider{border-top:1px dashed var(--blue-tint);border-color:#A9C4F5;margin:clamp(18px,2.4vw,32px) 0;width:clamp(178px,25.5vw,355px)}
+/* width:fit-content (capped) instead of flex:1 — the code block should only be as wide as its */
+/* longest line, not stretch to fill the row and leave a band of empty dark background behind it */
+.typo-code{
+  flex:0 1 auto;width:fit-content;max-width:clamp(360px,42vw,620px);min-width:0;background:#262626;color:#fff;border-radius:6px;
+  padding:clamp(10px,1.3vw,18px) clamp(12px,1.5vw,20px);
+  font-family:var(--mono);font-size:clamp(8px,.62vw,11px);line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;
+}
+.typo-code-title{display:block;font-weight:700;margin-bottom:4px}
+.typo-code .tk-str{color:#8CE071}
+.typo-code .tk-num{color:#F0954C}
+@media(max-width:900px){
+  .typo-layout{flex-direction:column}
+  .typo-left{width:100%}
+  .typo-row{flex-direction:column}
+  .typo-row-label{width:100%}
+  .typo-figma-group{flex-direction:column;padding-right:0}
+  .typo-code{width:100%;max-width:100%}
+}
+
+/* newsletter template-reference slide 1: copy + real device mockup */
+.nl-copy{display:flex;flex-direction:column;gap:clamp(12px,1.6vw,24px)}
+.nl-copy p{color:var(--ink-2);font-size:var(--fs-body-fluid);line-height:1.55}
+.nl-components{display:flex;flex-direction:column;gap:4px;font-size:var(--fs-body-fluid);color:var(--ink)}
+.nl-components-label{margin-bottom:2px}
+.nl-mock{display:flex;justify-content:center}
+.nl-mock img{width:auto;height:auto;max-width:100%;max-height:clamp(220px,38vw,520px);object-fit:contain}
+@media(max-width:900px){
+  .nl-showcase{flex-direction:column;align-items:center}
+  .nl-copy{width:100%}
+}
+
+/* newsletter template-reference slide 2: annotated wireframe anatomy + component swatches */
+.nl-wire-wrap{display:flex;justify-content:center}
+.nl-wire{
+  width:clamp(200px,20vw,280px);border:1px solid var(--line);
+  display:flex;flex-direction:column;background:#fff;
+  font-family:var(--sans);
+}
+.nl-wire-row{position:relative;padding:clamp(8px,1vw,14px) clamp(10px,1.1vw,16px)}
+
+/* callout labels: each sits relative to its OWN row, so it always lines up with that */
+/* section regardless of row height — no fragile global percentage positioning needed */
+.nl-callout{
+  position:absolute;top:50%;transform:translateY(-50%);width:clamp(80px,9vw,130px);
+  font-size:clamp(7.5px,.55vw,9.5px);line-height:1.4;
+}
+.nl-callout b{display:block;font-size:clamp(8.5px,.62vw,11px);font-weight:600;color:var(--ink);margin-bottom:1px}
+.nl-callout small{display:block;color:var(--ink-3);font-family:var(--mono)}
+.nl-callout-left{right:calc(100% + 22px);text-align:right}
+.nl-callout-left::after{content:"";position:absolute;top:50%;right:-22px;width:18px;height:1px;background:var(--ink-3)}
+.nl-callout-right{left:calc(100% + 22px);text-align:left}
+.nl-callout-right::before{content:"";position:absolute;top:50%;left:-22px;width:18px;height:1px;background:var(--ink-3)}
+
+.nl-wire-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line-2)}
+.nl-wire-logo{font-family:var(--sans);font-style:italic;font-weight:800;font-size:clamp(9px,.7vw,12px)}
+.nl-wire-orbit{
+  width:clamp(16px,1.6vw,26px);height:clamp(16px,1.6vw,26px);border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#7FA6FF,var(--blue) 70%);
+}
+.nl-wire-title{font-weight:800;font-size:clamp(10px,.85vw,14px);line-height:1.2;letter-spacing:-.01em}
+.nl-wire-note{background:var(--blue-tint)}
+.nl-wire-note-label{font-size:clamp(7px,.5vw,8.5px);font-weight:700;color:var(--blue);text-align:center;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.nl-wire-note p{font-size:clamp(6.5px,.48vw,8px);color:var(--ink-2);line-height:1.45;margin-bottom:5px}
+.nl-wire-btn,.nl-wire-cta-btn{
+  font-family:var(--sans);font-size:clamp(6.5px,.48vw,8px);font-weight:600;color:#fff;background:var(--blue);
+  border:0;padding:5px 9px;margin-top:4px;cursor:default;
+}
+.nl-wire-image{
+  height:clamp(50px,6vw,90px);
+  background-image:linear-gradient(45deg,var(--line-2) 25%,transparent 25%),linear-gradient(-45deg,var(--line-2) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--line-2) 75%),linear-gradient(-45deg,transparent 75%,var(--line-2) 75%);
+  background-size:10px 10px;background-position:0 0,0 5px,5px -5px,-5px 0;
+}
+.nl-wire-headline{font-weight:700;font-size:clamp(9px,.68vw,11px);line-height:1.3}
+.nl-wire-copy p{font-size:clamp(6.5px,.48vw,8px);color:var(--ink-2);line-height:1.45;margin-bottom:5px}
+.nl-wire-copy ul{margin:0 0 0 clamp(9px,.8vw,13px);font-size:clamp(6.5px,.48vw,8px);color:var(--ink-2);line-height:1.4}
+.nl-wire-copy li{margin-bottom:3px}
+.nl-wire-cta{background:linear-gradient(150deg,#123AAE 0%,#1B4BD6 60%,#2E63EF 100%);color:#fff}
+.nl-wire-cta-title{font-weight:700;font-size:clamp(9px,.68vw,11px);margin-bottom:4px}
+.nl-wire-cta p{font-size:clamp(6.5px,.48vw,8px);color:rgba(255,255,255,.85);line-height:1.45;margin-bottom:5px}
+.nl-wire-cta-btn{background:#fff;color:var(--blue-deep)}
+.nl-wire-footer{
+  display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;
+  border-top:1px solid var(--line-2);color:var(--ink-3);
+}
+.nl-wire-social{font-size:clamp(8px,.6vw,10px);letter-spacing:.1em}
+.nl-wire-address{font-family:var(--mono);font-size:clamp(5.5px,.4vw,7px);line-height:1.5}
+.nl-wire-foot-logo{font-family:var(--sans);font-style:italic;font-weight:800;font-size:clamp(8px,.6vw,10px);color:var(--ink)}
+
+/* reusable component swatches — closer to production-ready than the wireframe above */
+.nl-comp-row{display:flex;gap:clamp(12px,1.8vw,24px);margin-top:clamp(24px,3vw,44px)}
+.nl-comp{flex:1;min-width:0}
+.nl-comp-label{margin-bottom:clamp(5px,.6vw,8px)}
+.nl-comp-preview{
+  border:1px solid var(--line);padding:clamp(10px,1.2vw,16px);
+  font-size:clamp(9px,.6vw,11px);height:100%;
+}
+.nl-comp-note{background:var(--blue-tint)}
+.nl-comp-note-label{font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;font-size:.9em;text-align:center;margin-bottom:8px}
+.nl-comp-note p{color:var(--ink-2);line-height:1.5;margin-bottom:10px}
+.nl-comp-note-btn,.nl-comp-dark-btn{
+  font-family:var(--sans);font-weight:600;background:var(--blue);color:#fff;border:0;
+  padding:7px 12px;font-size:.95em;cursor:default;
+}
+.nl-comp-note-btn span{margin-left:4px}
+.nl-comp-dark{background:linear-gradient(150deg,#123AAE 0%,#1B4BD6 60%,#2E63EF 100%);color:#fff;text-align:center}
+.nl-comp-dark-title{font-weight:700;margin-bottom:6px}
+.nl-comp-dark p{color:rgba(255,255,255,.85);line-height:1.5;margin-bottom:10px}
+.nl-comp-dark-btn{background:#fff;color:var(--blue-deep)}
+.nl-comp-footer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--ink-3);font-family:var(--mono);text-align:center}
+.nl-comp-footer span:last-child{font-family:var(--sans);font-style:italic;font-weight:800;color:var(--ink)}
+.nl-dots{letter-spacing:.15em}
+@media(max-width:900px){
+  .nl-comp-row{flex-direction:column}
+}
 @media(max-width:900px){
   .doc-slide{padding:88px 24px 90px}
   .doc-slide-num{right:24px}
-  .mission-body{margin-left:0;padding:0 24px}
+  .mission-slide{align-items:stretch;padding:0 24px}
+  .mission-body{max-width:none}
   .slide-foot{padding:0 24px;flex-wrap:wrap;gap:6px}
 }
 @media(max-width:760px){
@@ -179,29 +484,62 @@ section:last-child{border-bottom:0}
 }
 
 /* ---------- headings ---------- */
-.sec-head{display:flex;gap:26px;align-items:flex-start;margin-bottom:14px}
-.sec-num{font-family:var(--mono);font-size:12px;color:var(--blue);padding-top:14px;min-width:34px}
-h2{font-size:clamp(30px,3.6vw,42px);letter-spacing:-.035em;font-weight:700;line-height:1.06}
-.sec-fmt{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--ink-3);margin:9px 0 0 60px;text-transform:uppercase}
-.sec-intro{margin:26px 0 0 60px;max-width:620px;color:var(--ink-2);font-size:16.5px}
-h3{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink);margin:52px 0 18px;padding-bottom:9px;border-bottom:1px solid var(--ink);
-}
-.body-block{margin-left:60px}
-@media(max-width:900px){.body-block,.sec-intro,.sec-fmt{margin-left:0}}
+/* every heading in the document — slide-canvas and long-form alike — is one h2 rule. */
+/* Change it here and it changes everywhere; scoped overrides below are the only exceptions. */
+/* underline hugs the heading's own width (h2 is the only in-flow child of the flex .doc-head */
+/* now that .doc-fmt moved out to the corner, so it sizes to its text, not the full row) — */
+/* heading and body copy both live inside the one .doc-content wrapper, no separate section */
+h2{font-size:24px;font-weight:500;letter-spacing:-.03em;line-height:1.15;display:inline-block; margin-bottom:16px;}
+/* cover/divider slides (the per-format title pages) get a slightly larger heading, no underline */
+.divider-slide h2{font-size:120px;font-weight:300;padding-bottom:0;border-bottom:0;display:block}
 
 /* ---------- rule list ---------- */
 .rules{list-style:none}
-.rules li{padding:13px 0;border-bottom:1px solid var(--line-2);display:flex;gap:18px}
+.rules li{padding:2px 0;}
 .rules li:last-child{border-bottom:0}
 .rules b{font-weight:600;min-width:150px;flex-shrink:0}
 .rules span{color:var(--ink-2)}
 
+/* compact one-line-per-point list — same rule content as .rules, without a bordered row per */
+/* item, so a "Principles" block can sit above an image instead of eating the whole column */
+.dd-list{list-style:none}
+.dd-list li{padding:6px 0 6px 16px;position:relative;color:var(--ink-2);font-size:var(--fs-body-fluid);line-height:1.5}
+.dd-list li::before{content:"•";position:absolute;left:0;color:var(--blue)}
+.dd-list b{color:var(--ink);font-weight:600}
+
+/* ---------- LUT download card ---------- */
+.lut-download{
+  display:inline-block;align-self:flex-start;
+  margin-top:24px;padding:10px 16px;border:1px solid var(--line);border-radius:4px;
+  background:var(--blue-tint);text-decoration:none;transition:border-color .15s,background .15s;
+  font-family:var(--ui);font-size:12.5px;font-weight:500;color:var(--ink);
+}
+.lut-download:hover{border-color:var(--blue);background:#e4ecfd}
+
+/* ---------- imagery mosaic (4.0) ---------- */
+.img-layout{gap:clamp(40px,6vw,80px)}
+.img-mosaic{
+  flex:1;min-width:0;align-self:stretch;
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:repeat(3,1fr);
+  gap:clamp(6px,0.5vw,12px);
+}
+.img-mosaic img{width:100%;height:100%;object-fit:cover;display:block;border-radius:2px}
+.img-mosaic .m-1{grid-column:1;grid-row:1}
+.img-mosaic .m-2{grid-column:2 / 4;grid-row:1}
+.img-mosaic .m-3{grid-column:1;grid-row:2}
+.img-mosaic .m-4{grid-column:2;grid-row:2}
+.img-mosaic .m-5{grid-column:3;grid-row:2}
+.img-mosaic .m-6{grid-column:1 / 3;grid-row:3}
+.img-mosaic .m-7{grid-column:3;grid-row:3}
+@media(max-width:900px){
+  .img-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:160px}
+  .img-mosaic .m-1,.img-mosaic .m-2,.img-mosaic .m-3,.img-mosaic .m-4,.img-mosaic .m-5,.img-mosaic .m-6,.img-mosaic .m-7{grid-column:auto;grid-row:auto}
+}
+
 /* ---------- tables ---------- */
-table{width:100%;border-collapse:collapse;font-size:14.5px}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-body)}
 th{
-  text-align:left;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;
+  text-align:left;font-family:var(--mono);font-size: var(--fs-body-fluid);letter-spacing:.11em;
   text-transform:uppercase;color:var(--ink-3);font-weight:400;
   padding:0 14px 9px 0;border-bottom:1px solid var(--ink);
 }
@@ -216,42 +554,45 @@ td code{font-family:var(--mono);font-size:12px;color:var(--blue);background:var(
 .dd .do h4{color:var(--green)}
 .dd .dont h4{color:var(--red)}
 .dd ul{list-style:none}
-.dd li{padding:9px 0 9px 22px;position:relative;font-size:14.5px;color:var(--ink-2);border-bottom:1px solid var(--line-2)}
+.dd li{padding:9px 0 9px 22px;position:relative;font-size:var(--fs-body);color:var(--ink-2);border-bottom:1px solid var(--line-2)}
 .dd li:last-child{border-bottom:0}
 .dd li::before{position:absolute;left:0;top:9px;font-family:var(--mono);font-size:12px}
 .dd .do li::before{content:"+";color:var(--green)}
 .dd .dont li::before{content:"−";color:var(--red)}
 
 /* ---------- callout ---------- */
-.note{border-left:2px solid var(--blue);padding:4px 0 4px 20px;margin:30px 0;color:var(--ink-2);font-size:15.5px;max-width:620px}
+.note{padding:4px 0 4px 4px;margin:30px 0;color:var(--ink-2);font-size:var(--fs-body);max-width:620px}
+.gen-shapes .note{margin:clamp(12px,1.5vw,24px) 0 0;font-size:var(--fs-body-fluid)}
 .note strong{color:var(--ink);font-weight:600}
 
 /* ---------- shape system / generator ---------- */
-.gen{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:44px;align-items:start}
+.gen{display:grid; align-items: center;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:44px;}
 @media(max-width:1240px){.gen{grid-template-columns:1fr}}
-.shapegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gen-shapes{display:flex;flex-direction:column}
+.shapegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(4px,.4vw,6px)}
 .shapebtn{
   background:none;border:1px solid var(--line);cursor:pointer;font-family:inherit;
-  padding:20px 10px 16px;text-align:center;transition:border-color .15s,background .15s;
+  padding:clamp(10px,1.2vw,20px) clamp(6px,.7vw,10px) clamp(8px,1vw,16px);
+  text-align:center;transition:border-color .15s,background .15s;
 }
 .shapebtn:hover{border-color:var(--ink-3);background:var(--paper-2)}
 .shapebtn[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint)}
 .shapebtn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-.shapebtn svg{width:38px;height:38px;display:block;margin:0 auto 12px}
-.shapebtn .code{font-family:var(--mono);font-size:9px;letter-spacing:.13em;color:var(--blue);display:block;margin-bottom:7px}
-.shapebtn .lab{font-size:12.5px;font-weight:600;line-height:1.25;display:block;color:var(--ink)}
-.shapebtn .mean{font-family:var(--mono);font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);display:block;margin-top:6px;line-height:1.5}
+.shapebtn img{width:clamp(20px,2.3vw,38px);height:clamp(20px,2.3vw,38px);object-fit:contain;display:block;margin:0 auto clamp(6px,.75vw,12px)}
+.shapebtn .code{font-family:var(--mono);font-size:clamp(7px,.5vw,9px);letter-spacing:.13em;color:var(--blue);display:block;margin-bottom:clamp(3px,.4vw,7px)}
+.shapebtn .lab{font-size:clamp(10px,.78vw,12.5px);font-weight:600;line-height:1.25;display:block;color:var(--ink)}
+.shapebtn .mean{font-family:var(--mono);font-size:clamp(7px,.48vw,8.5px);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);display:block;margin-top:clamp(3px,.35vw,6px);line-height:1.4}
 
 
-.modeswitch{display:flex;border:1px solid var(--line);width:fit-content;margin-bottom:14px}
+.modeswitch{display:flex;border:1px solid var(--line);width:fit-content;margin-bottom:clamp(8px,.9vw,14px)}
 .modeswitch button{
-  font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;
-  background:none;border:0;color:var(--ink-3);padding:7px 15px;cursor:pointer;
+  font-family:var(--mono);font-size:clamp(7px,.5vw,9px);letter-spacing:.11em;text-transform:uppercase;
+  background:none;border:0;color:var(--ink-3);padding:clamp(4px,.5vw,7px) clamp(9px,1vw,15px);cursor:pointer;
 }
 .modeswitch button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .modeswitch button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
-.shapepanel{padding:18px;border:1px solid var(--line);transition:background .2s}
+.shapepanel{padding:clamp(10px,1.15vw,18px);border:1px solid var(--line);transition:background .2s}
 .shapepanel[data-mode="dark"]{background:#1F46D2;border-color:#1F46D2}
 .shapepanel[data-mode="dark"] .shapebtn{border-color:rgba(255,255,255,.22)}
 .shapepanel[data-mode="dark"] .shapebtn:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
@@ -259,13 +600,16 @@ td code{font-family:var(--mono);font-size:12px;color:var(--blue);background:var(
 .shapepanel[data-mode="dark"] .shapebtn .code{color:#BDD1FF}
 .shapepanel[data-mode="dark"] .shapebtn .lab{color:#fff}
 .shapepanel[data-mode="dark"] .shapebtn .mean{color:rgba(255,255,255,.62)}
-.shapepanel[data-mode="dark"] .shapebtn svg use{fill:url(#gTonal)}
-.covers{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+/* only the cover matching the active Light/Dark toggle stays visible; the note sits right under it */
+/* only the cover matching the active Light/Dark toggle stays visible */
+.covers{display:flex;flex-direction:column;max-width:280px}
+.covers[data-mode="light"] .cover-wrap-dark{display:none}
+.covers[data-mode="dark"] .cover-wrap-light{display:none}
 .cover{
-  aspect-ratio:210/297;padding:9% 8.5%;display:flex;flex-direction:column;
+  aspect-ratio:197/297;padding:9% 8.5%;display:flex;flex-direction:column;
   position:relative;overflow:hidden;
 }
-.cover .cshape{position:absolute;z-index:1}
+.cover .cshape{position:absolute;z-index:1;object-fit:contain}
 .cover .clock{position:relative;z-index:2}
 .cover .clock .logo-lockup{height:11px;width:auto;display:block}
 .cv-dark .clock .logo-lockup{filter:invert(1) brightness(1.9)}
@@ -292,12 +636,12 @@ td code{font-family:var(--mono);font-size:12px;color:var(--blue);background:var(
 /* ---------- checklist ---------- */
 .qa{list-style:none;columns:2;column-gap:36px}
 @media(max-width:760px){.qa{columns:1}}
-.qa li{break-inside:avoid;padding:9px 0 9px 26px;position:relative;font-size:14.5px;color:var(--ink-2)}
+.qa li{break-inside:avoid;padding:9px 0 9px 26px;position:relative;font-size:var(--fs-body);color:var(--ink-2)}
 .qa li::before{content:"";position:absolute;left:0;top:12px;width:11px;height:11px;border:1px solid var(--ink-3)}
 
 /* ---------- open items ---------- */
 .open{background:var(--paper-2);border:1px solid var(--line);padding:26px 28px;margin-top:16px}
-.open ol{margin-left:18px;font-size:14.5px;color:var(--ink-2)}
+.open ol{margin-left:18px;font-size:var(--fs-body);color:var(--ink-2)}
 .open li{padding:6px 0}
 
 
@@ -308,11 +652,29 @@ body.commenting a,body.commenting button:not(.an-ui){pointer-events:none}
 body.drawer-open main{margin-right:360px}
 @media(max-width:1200px){body.drawer-open main{margin-right:0}}
 
+/* small persistent launcher — the review layer stays fully out of the way until this is clicked */
+
+/* hidden for now — the review layer's launcher button, not the layer/annotations themselves. */
+/* remove this rule to bring it back. */
+.an-launcher{display:none!important}
+.an-launcher{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:119;
+  display:flex;align-items:center;gap:7px;background:var(--ink);color:rgba(255,255,255,.72);
+  border:0;padding:10px 16px;border-radius:999px;cursor:pointer;
+  font-family:var(--ui);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  box-shadow:0 6px 24px rgba(0,0,0,.2);transition:color .15s,opacity .15s;
+}
+.an-launcher:hover{color:#fff}
+.an-launcher[aria-pressed="true"]{display:none}
+.an-launcher-dot{width:6px;height:6px;border-radius:50%;background:var(--blue)}
+
 .an-toolbar{
   position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:120;
   display:flex;align-items:center;gap:2px;background:var(--ink);padding:5px;
   box-shadow:0 6px 28px rgba(0,0,0,.22);font-family:var(--ui);
 }
+.an-toolbar[hidden]{display:none}
+#anClose{letter-spacing:0;font-size:12px}
 .an-toolbar button{
   font-family:var(--ui);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
   background:none;border:0;color:rgba(255,255,255,.65);padding:9px 14px;cursor:pointer;white-space:nowrap;
