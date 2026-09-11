@@ -78,11 +78,10 @@
     <li><a href="#s4"><span class="n">4.0</span> Brochure</a></li>
     <li><a href="#s5"><span class="n">5.0</span> Deck</a></li>
     <li><a href="#s6"><span class="n">6.0</span> Checklist</a></li>
-    <li><a href="#s7"><span class="n">7.0</span> E-Book</a></li>
-    <li><a href="#s8"><span class="n">8.0</span> Social Media</a></li>
-    <li><a href="#s9"><span class="n">9.0</span> Newsletter</a></li>
+    <li><a href="#s8"><span class="n">7.0</span> Social Media</a></li>
+    <li><a href="#s9"><span class="n">8.0</span> Newsletter</a></li>
     <li class="grp">Application</li>
-    <li><a href="#s10"><span class="n">10.0</span> Usage &amp; Governance</a></li>
+    <li><a href="#s10"><span class="n">9.0</span> Usage &amp; Governance</a></li>
   </ul>
   <div class="rail-foot">Version 1.0<br>Brand Book / Toolkit<br><a href="https://tkxel.com" target="_blank" rel="noopener">tkxel.com</a></div>
 </nav>
@@ -575,22 +574,7 @@ const SECTIONS=[
  do:["Keep items to short action phrases","Group related items under clear labels","Test that it prints in black and white","Close with an interpretation block"],
  dont:["Don't add backgrounds that waste printer ink","Don't exceed 20 items on a page","Don't mix checkbox styles in one document","Don't split a group across a page break"]},
 
-{n:"7.0",id:"s7",t:"E-Book",fmt:"PDF · Portrait or Landscape · 20–60 pages",
- intro:"Long-form, design-led educational content. Where a white paper argues a position and a report presents data, an e-book teaches a subject end to end. The most visually produced document in the system.",
- order:"Cover → Contents → Introduction → Chapters → Key Takeaways → About / CTA → Back Cover",
- file:"tkxel_eBook_TopicName_YYYY-MM_v1.pdf",
- layout:[["Orientation","Portrait for print or desktop reading at length; landscape for screen-first, image-heavy content. One per title — never mixed."],
-  ["Grid","Modular 12-column. Chapter openers full-bleed, body single or double column by orientation."],
-  ["Margins","20mm portrait / 40px landscape."],
-  ["Chapter openers","Full page: number, title, one-line descriptor, supporting visual. These carry the document's pacing."],
-  ["Visual density","Every spread carries at least one non-text element."],
-  ["Takeaways","Each chapter closes with three to five bulleted takeaways on a tint."]],
- type:[["Cover Title","display/xl",""],["Chapter Number","data/lg","Opener pages"],["Chapter Title","heading/01",""],["Body","body/md","1.6 line height"],["Takeaway Item","body/md","Tinted block"],["Caption","body/sm",""]],
- visual:"Chapter openers may use full color fields or full-bleed imagery — this is where an e-book differs from a white paper, in visual pacing. Illustration over photography for conceptual content, and one illustration style held throughout; mixing styles is the fastest way to make a long document look assembled rather than designed.",
- do:["Give every chapter a full-page opener","Close each chapter with key takeaways","Hyperlink the contents page","Hold one illustration style throughout"],
- dont:["Don't mix portrait and landscape in one title","Don't mix illustration styles across chapters","Don't let a spread run with no visual element","Don't exceed 60 pages — split into a series"]},
-
-{n:"8.0",id:"s8",t:"Social Media",fmt:"PNG / JPG / MP4 · Multiple ratios",
+{n:"7.0",id:"s8",t:"Social Media",fmt:"PNG / JPG / MP4 · Multiple ratios",
  intro:"Distributes everything above and builds presence between campaigns. LinkedIn is the primary platform; all specifications are LinkedIn-first with adaptations noted.",
  order:"Carousel: Frame 1 hook and title → Frames 2–N−1 content → Final frame CTA",
  file:"tkxel_Social_Platform_Type_TopicName_v1.png",
@@ -607,7 +591,7 @@ const SECTIONS=[
  do:["Keep critical content inside the safe zone","Make frame 1 work as a standalone image","Source every statistic on the graphic itself","Write alt text for every published asset"],
  dont:["Don't go below 32px type on a 1080 canvas","Don't change background treatment mid-carousel","Don't fill a frame with paragraph text","Don't reposition the logo per layout"]},
 
-{n:"9.0",id:"s9",t:"Newsletter",fmt:"HTML Email · 600px wide · Single column",
+{n:"8.0",id:"s9",t:"Newsletter",fmt:"HTML Email · 600px wide · Single column",
  intro:"A recurring email digest — product updates, published collateral and upcoming events. Where other formats are produced per campaign, the newsletter is scheduled, so consistency across issues matters more than novelty in any single one.",
  order:"Header (logo + issue date) → Lead story → Secondary items → Event / CTA block → Footer (unsubscribe + social)",
  file:"tkxel_Newsletter_YYYY-MM_v1.html",
@@ -868,6 +852,26 @@ const coversCarousel=(coversHtml,trackClass)=>{
   </div>`;
 };
 
+// Case Study only: a row of independent asset carousels — each item is its own scoped
+// mini-carousel (own images, own prev/next, own counter), rather than one shared carousel
+// paging across all covers together. stacks: array of {name, images:[{src,alt}]}
+const assetRow=(stacks,frameClass="")=>`
+  <div class="asset-row">
+    ${stacks.map(stack=>`
+    <figure class="asset-carousel" data-carousel>
+      <div class="asset-frame${frameClass?` ${frameClass}`:""}">
+        <div class="asset-track">
+          ${stack.images.map((img,i)=>`<img src="${img.src}" alt="${stack.name} — page ${i+1} of ${stack.images.length}">`).join("")}
+        </div>
+      </div>
+      <figcaption class="asset-controls">
+        <button type="button" data-prev aria-label="Previous slide">‹</button>
+        <span data-count class="mono"></span>
+        <button type="button" data-next aria-label="Next slide">›</button>
+      </figcaption>
+    </figure>`).join("")}
+  </div>`;
+
 // White Paper's Structure slide (1.1), custom rather than the shared formatSlides template —
 // naming rule, component list and three real cover examples, not just Order + File naming
 const whitePaperStructure=`
@@ -915,22 +919,25 @@ const NAMING_NOTES={
   s4:"Always one word — <b>Brochure</b>. No abbreviation (\"Broch\") in any heading or file name.",
   s5:"Always one word — <b>Deck</b>, not Presentation or Slidedeck. PPTX and PDF exports share the same file-naming pattern below.",
   s6:"Always one word — <b>Checklist</b>, never <s>Check List</s> or <s>Check-list</s>, in headings, file names or body copy.",
-  s7:"Always hyphenated — <b>E-Book</b>. Never <s>Ebook</s> or <s>eBook</s> — capital E, capital B.",
   s8:"Always two words — <b>Social Media</b>. Individual posts are referred to by platform and format (e.g. \"LinkedIn Carousel\"), not \"Social Post.\"",
   s9:"Always one word — <b>Newsletter</b>. Each send is an issue, numbered by month in the file name below."
 };
 // real cover examples, dropped in as they're supplied — anything not listed here still falls
 // back to the dashed placeholder tiles in structureSlide below
+// Social Media (8.1) uses the asset-row carousel instead — see structureSlide's s.id==="s8"
+// branch — so its images live here rather than in REAL_COVERS
+const SOCIAL_ASSET_IMAGES=Array.from({length:5},(_,i)=>({src:`assets%20/social%20media${i+1}.jpg`,alt:`Social Media asset — page ${i+1} of 5`}));
+const SOCIAL_ASSET_IMAGES_2=Array.from({length:5},(_,i)=>({src:`assets%20/social%20media2-${i+1}.jpg.png`,alt:`Social Media asset 2 — page ${i+1} of 5`}));
 const REAL_COVERS={
   s2:Array.from({length:12},(_,i)=>`assets%20/report/${i+1}.png`),
   s3:["assets%20/CS-1.png","assets%20/CS-2.png","assets%20/CS-3.png"],
+  s4:["assets%20/Brochure-1.png","assets%20/Brochure-2.png","assets%20/Brochure-3.png"],
   s5:Array.from({length:8},(_,i)=>`assets%20/deck/0${i+1}.png`),
-  s6:Array.from({length:8},(_,i)=>`assets%20/checklist/${i+1}.png`),
-  s8:["assets%20/social%20media%201.png","assets%20/social%20media%202.png"]
+  s6:Array.from({length:8},(_,i)=>`assets%20/checklist/${i+1}.png`)
 };
 const PLURAL_LABELS={
   s2:"Reports",s3:"Case Studies",s4:"Brochures",s5:"Decks",s6:"Checklists",
-  s7:"E-Books",s8:"Social Media",s9:"Newsletters"
+  s8:"Social Media",s9:"Newsletters"
 };
 const structureSlide=s=>{
   const base=s.n.split(".")[0];
@@ -971,7 +978,9 @@ const structureSlide=s=>{
           ${s.id==="s5"?"":figmaBtn(s.id,PLURAL_LABELS[s.id]||s.t)}
         </div>
         <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:clamp(16px,2vw,28px)">
-          ${coversCarousel(covers,`wp-covers${s.id==="s5"?" wp-covers-landscape":""}${s.id==="s8"?" wp-covers-wide":""}`)}
+          ${s.id==="s8"
+            ?assetRow([{name:"Social Media 1",images:SOCIAL_ASSET_IMAGES},{name:"Social Media 2",images:SOCIAL_ASSET_IMAGES_2}],"asset-frame-social")
+            :coversCarousel(covers,`wp-covers${s.id==="s5"?" wp-covers-landscape":""}`)}
           ${s.id==="s2"?"":`
           <ul class="rules">
             <li><b>Format: </b><span>${s.fmt}</span></li>
@@ -991,29 +1000,11 @@ const structureSlide=s=>{
 // newsletterShowcase (9.1 template mockup + 9.2 anatomy wireframe) is defined above but no
 // longer inserted below — removed per request; the const is left intact to bring back later
 host.innerHTML=SECTIONS.map(s=>divider(s,["Structure"])+(s.id==="s1"?whitePaperStructure:structureSlide(s))+formatSlides(s)).join("")+
-divider({t:"Usage &amp; Governance",n:"10.0"},["Shared Standards","Export Settings","Pre-Publish Checklist","Ownership"])+`
+divider({t:"Usage &amp; Governance",n:"9.0"},["Export Settings","Pre-Publish Checklist &amp; Ownership"])+`
 <section class="doc-slide slide-16-9" id="s10">
-  <div class="doc-slide-num">10.1</div>
+  <div class="doc-slide-num">9.1</div>
   <div class="doc-content">
-    <div class="doc-head"><h2 class="doc-title">Shared Standards</h2><span class="doc-fmt">Applies to every format above</span></div>
-    <div class="doc-body">
-      <ul class="rules">
-        <li><b>File naming</b><span style="font-family:var(--mono);font-size:12.5px">tkxel_[Type]_[Topic]_v[N].[ext]</span></li>
-        <li><b>Spelling</b><span>US English throughout. "White Paper" is set as two words in all body copy, headings and navigation; filenames close it up as <code style="font-family:var(--mono);font-size:12px">WhitePaper</code> because filenames carry no spaces.</span></li>
-        <li><b>Version &amp; date</b><span>On every cover. An undated document circulating two years later will be read as current.</span></li>
-        <li><b>Sourcing</b><span>Every statistic carries a source: <em>Source: [Organization], [Year].</em></span></li>
-        <li><b>Accessibility</b><span>WCAG 2.1 AA. Body text 4.5:1, large text 3:1. Alt text on every image and chart.</span></li>
-        <li><b>Confidentiality</b><span>Client-specific proposals and pitch decks carry a confidentiality mark in the footer.</span></li>
-        <li><b>Screenshots</b><span>Dummy data only. No real client names or figures without written approval.</span></li>
-      </ul>
-    </div>
-  </div>${slideFoot}
-</section>
-
-<section class="doc-slide slide-16-9">
-  <div class="doc-slide-num">10.2</div>
-  <div class="doc-content">
-    <div class="doc-head"><h2 class="doc-title">Export Settings</h2><span class="doc-fmt">Usage &amp; Governance</span></div>
+    <div class="doc-head"><h2 class="doc-title">Export Settings</h2><span class="doc-fmt">Applies to every format above</span></div>
     <div class="doc-body">
       <table><thead><tr><th>Format</th><th>Export</th><th>Settings</th></tr></thead><tbody>
         <tr><td>White Paper, Report, E-Book</td><td>PDF</td><td>Hyperlinked contents, 300dpi imagery</td></tr>
@@ -1028,41 +1019,39 @@ divider({t:"Usage &amp; Governance",n:"10.0"},["Shared Standards","Export Settin
 </section>
 
 <section class="doc-slide slide-16-9">
-  <div class="doc-slide-num">10.3</div>
-  <div class="doc-content">
-    <div class="doc-head"><h2 class="doc-title">Pre-Publish Checklist</h2><span class="doc-fmt">Usage &amp; Governance</span></div>
+  <div class="doc-slide-num">9.2</div>
+  <div class="doc-content doc-content-wide">
+    <div class="doc-head"><h2 class="doc-title">Pre-Publish Checklist &amp; Ownership</h2><span class="doc-fmt">Usage &amp; Governance</span></div>
     <div class="doc-body">
-      <ul class="qa">
-        <li>Proofread by someone other than the author</li>
-        <li>Every statistic sourced</li>
-        <li>Version and date correct on the cover</li>
-        <li>Client and partner logos current and approved</li>
-        <li>Confidentiality mark applied where required</li>
-        <li>Alt text written for all images and charts</li>
-        <li>Contrast checked against AA</li>
-        <li>All links tested</li>
-        <li>No placeholder text — search "Lorem", "TBD", "XX"</li>
-        <li>Filename follows convention</li>
-        <li>Exported at the settings above</li>
-      </ul>
-      <div class="note" style="margin-top:20px"><strong>Editable formats.</strong> Decks are the exception to PDF-only distribution — this must be decided and stated, since the undecided state is what causes brand drift.</div>
-    </div>
-  </div>${slideFoot}
-</section>
-
-<section class="doc-slide slide-16-9">
-  <div class="doc-slide-num">10.4</div>
-  <div class="doc-content">
-    <div class="doc-head"><h2 class="doc-title">Ownership</h2><span class="doc-fmt">Usage &amp; Governance</span></div>
-    <div class="doc-body">
-      <ul class="rules">
-        <li><b>System owner</b><span style="color:var(--ink-3)">[Name, role]</span></li>
-        <li><b>Requests</b><span style="color:var(--ink-3)">[Channel or form]</span></li>
-        <li><b>Turnaround</b><span style="color:var(--ink-3)">[X working days]</span></li>
-        <li><b>Approval required</b><span>New templates, any deviation from these guidelines, client-facing assets using client logos</span></li>
-        <li><b>Review cadence</b><span>Quarterly template audit; annual full review. Tagline reviewed at 24 months.</span></li>
-      </ul>
-      <div class="note" style="margin-top:20px"><strong>When the guidelines don't fit.</strong> If a required asset has no template here, that is a gap in the system — route it to the system owner rather than improvising.</div>
+      <div style="display:flex;gap:clamp(32px,4vw,64px);align-items:flex-start">
+        <div style="flex:1;min-width:0">
+          <h3 class="doc-h3" style="margin-top:0">PRE-PUBLISH CHECKLIST</h3>
+          <ul class="qa">
+            <li>Proofread by someone other than the author</li>
+            <li>Every statistic sourced</li>
+            <li>Version and date correct on the cover</li>
+            <li>Client and partner logos current and approved</li>
+            <li>Confidentiality mark applied where required</li>
+            <li>Alt text written for all images and charts</li>
+            <li>Contrast checked against AA</li>
+            <li>All links tested</li>
+            <li>No placeholder text — search "Lorem", "TBD", "XX"</li>
+            <li>Filename follows convention</li>
+            <li>Exported at the settings above</li>
+          </ul>
+        </div>
+        <div style="flex:1;min-width:0">
+          <h3 class="doc-h3" style="margin-top:0">OWNERSHIP</h3>
+          <ul class="rules">
+            <li><b>System owner</b><span style="color:var(--ink-3)">[Name, role]</span></li>
+            <li><b>Requests</b><span style="color:var(--ink-3)">[Channel or form]</span></li>
+            <li><b>Turnaround</b><span style="color:var(--ink-3)">[X working days]</span></li>
+            <li><b>Approval required</b><span>New templates, any deviation from these guidelines, client-facing assets using client logos</span></li>
+            <li><b>Review cadence</b><span>Quarterly template audit; annual full review. Tagline reviewed at 24 months.</span></li>
+          </ul>
+          <div class="note" style="margin-top:20px"><strong>When the guidelines don't fit.</strong> If a required asset has no template here, that is a gap in the system — route it to the system owner rather than improvising.</div>
+        </div>
+      </div>
     </div>
   </div>${slideFoot}
 </section>`;
@@ -1088,6 +1077,31 @@ document.querySelectorAll(".wp-covers-wrap").forEach(wrap=>{
   up?.addEventListener("click",()=>vp.scrollBy({top:-vp.clientHeight,behavior:"smooth"}));
   down?.addEventListener("click",()=>vp.scrollBy({top:vp.clientHeight,behavior:"smooth"}));
   vp.addEventListener("scroll",update,{passive:true});
+  update();
+});
+
+// Case Study asset row — each [data-carousel] is initialized in its own closure with its own
+// `index`, so the three carousels never share state. Sliding moves the track via transform
+// (GPU-composited, no reflow) rather than hiding/showing images. No wrap-around: prev disables
+// at the first slide, next at the last — looping from the last page back to the cover would be
+// disorienting for a document. Slide count reads from the DOM (track.children.length), so
+// adding a fourth asset or a fifth image to an existing one needs no JS changes here.
+document.querySelectorAll("[data-carousel]").forEach(root=>{
+  const track=root.querySelector(".asset-track");
+  const prev=root.querySelector("[data-prev]");
+  const next=root.querySelector("[data-next]");
+  const count=root.querySelector("[data-count]");
+  if(!track||!prev||!next) return;
+  let index=0;
+  const total=()=>track.children.length;
+  const update=()=>{
+    track.style.transform=`translateX(-${index*100}%)`;
+    prev.disabled=index<=0;
+    next.disabled=index>=total()-1;
+    if(count) count.textContent=`${index+1} / ${total()}`;
+  };
+  prev.addEventListener("click",()=>{ if(index>0){ index--; update(); } });
+  next.addEventListener("click",()=>{ if(index<total()-1){ index++; update(); } });
   update();
 });
 

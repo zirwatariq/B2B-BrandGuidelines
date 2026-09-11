@@ -207,20 +207,26 @@ main{margin-left:0}
 /* covers carousel: the viewport scrolls natively (with snap), the two arrow buttons just call */
 /* scrollBy one viewport-width at a time — no manual page/translateX bookkeeping needed, and it */
 /* works unchanged whether there are 3 covers (nothing to scroll, arrows disable themselves) */
-/* or 30. Native scrollbar is hidden since the arrows are the intended control. */
-.wp-covers-wrap{display:flex;align-items:center;gap:8px}
+/* or 30. Native scrollbar is hidden since the arrows are the intended control. Arrows are */
+/* overlaid on the images (position:absolute), not flex siblings beside them — otherwise their */
+/* own width gets added to the row, narrowing the covers or widening the whole component. */
+.wp-covers-wrap{position:relative}
 .wp-covers-viewport{
-  flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;
+  overflow-x:auto;overflow-y:hidden;
   scroll-behavior:smooth;scroll-snap-type:x mandatory;scrollbar-width:none;
 }
 .wp-covers-viewport::-webkit-scrollbar{display:none}
 .wpc-arrow{
-  flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
-  background:var(--paper);color:var(--ink);font-size:15px;line-height:1;cursor:pointer;
+  position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+  width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
+  background:#fff;color:var(--ink);font-size:15px;line-height:1;cursor:pointer;
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
   display:flex;align-items:center;justify-content:center;transition:border-color .15s,color .15s;
 }
+.wpc-prev{left:8px}
+.wpc-next{right:8px}
 .wpc-arrow:hover{border-color:var(--blue);color:var(--blue)}
-.wpc-arrow:disabled{opacity:.3;cursor:default;pointer-events:none}
+.wpc-arrow:disabled{display:none}
 /* stacked cover treatments (Deck, Social Media) scroll vertically within their own column — */
 /* the paging arrows are a horizontal-row control, so they don't apply there */
 .wp-covers-wrap:has(.wp-covers-landscape) .wpc-arrow,.wp-covers-wrap:has(.wp-covers-wide) .wpc-arrow{display:none}
@@ -277,6 +283,33 @@ main{margin-left:0}
 .wp-covers-wide img{aspect-ratio:4/1;flex:none;width:100%;object-fit:contain;border:1px solid var(--line);border-radius:4px}
 @media(max-width:900px){.wp-covers{flex-direction:column}}
 
+/* Case Study only: a row of independent asset carousels — see assetRow() for markup. Each */
+/* .asset-carousel is its own scope: own track, own prev/next, own counter, no shared state */
+/* with its neighbors, and no wrap-around (prev/next just disable at either end). */
+/* auto-fit rather than a fixed 3 columns — one asset (Social Media) fills the row, three */
+/* split into thirds, with no template change needed either way */
+.asset-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:clamp(12px,1.6vw,24px)}
+.asset-frame{position:relative;overflow:hidden;aspect-ratio:1236/1750;border:1px solid var(--line);border-radius:4px;max-width:280px;margin:0 auto}
+/* a modifier class is how a differently-proportioned asset set overrides the ratio, rather */
+/* than changing the base — Social Media's posts are 4:5, not the A4-portrait default */
+.asset-frame-social{aspect-ratio:4/5}
+.asset-track{display:flex;height:100%;transition:transform .25s ease}
+@media(prefers-reduced-motion:reduce){.asset-track{transition:none}}
+.asset-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;display:block}
+.asset-controls{
+  display:flex;align-items:center;justify-content:center;gap:10px;margin:8px 0 0;
+}
+.asset-controls button{
+  width:24px;height:24px;border-radius:50%;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font-size:13px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:border-color .15s,color .15s;
+}
+.asset-controls button:hover{border-color:var(--blue);color:var(--blue)}
+.asset-controls button:disabled{opacity:.3;cursor:default;pointer-events:none}
+.asset-controls button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.asset-controls [data-count]{font-size:9px;letter-spacing:.08em;color:var(--ink-3);min-width:28px;text-align:center}
+@media(max-width:900px){.asset-row{grid-template-columns:1fr}}
+
 /* dark variant */
 .doc-slide-dark{
   background:linear-gradient(150deg,#123AAE 0%,#1B4BD6 46%,#2E63EF 100%);
@@ -316,6 +349,8 @@ main{margin-left:0}
 /* Typography (3.0) is the reference point: one rule drives gap + column widths for every */
 /* left-content / right-visual slide, so they can't drift apart into separate numbers again */
 .typo-layout,.sn-layout,.nl-showcase{display:flex;gap:clamp(40px,10vw,10px);align-items:center}
+/* Typography (3.0) only — more room between the left copy and the right-hand usage panel */
+#typography .typo-layout{gap:clamp(64px,8vw,140px)}
 .typo-left,.sn-copy,.nl-copy{width:clamp(240px,28vw,400px);flex-shrink:0}
 .typo-usage,.namegrid,.nl-mock{flex:1;min-width:0}
 .typo-usage-title{
@@ -624,12 +659,12 @@ td code{font-family:var(--mono);font-size:12px;color:var(--blue);background:var(
 }
 /* light */
 .cv-light{background:#fff;border:1px solid var(--line);color:var(--ink)}
-.cv-light .cshape{top:-20%;right:-26%;width:105%;height:105%}
+.cv-light .cshape{top:-50%;right:-50%;width:130%;height:130%}
 .cv-light .crule{background:var(--line)}
 .cv-light .clabel{color:var(--ink-2)}
 /* dark */
 .cv-dark{background:linear-gradient(150deg,#123AAE 0%,#1B4BD6 46%,#2E63EF 100%);color:#fff;border:1px solid #123AAE}
-.cv-dark .cshape{top:-30%;right:-34%;width:125%;height:125%}
+.cv-dark .cshape{top:-50%;right:-50%;width:130%;height:130%}
 .cv-dark .csub{color:rgba(255,255,255,.86)}
 .cover-cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
 
