@@ -93,7 +93,7 @@ main{margin-left:0}
 .hero-top .logo-lockup{height:clamp(20px,1.7vw,32px);width:auto;display:block}
 
 .hero-title{
-  font-size:clamp(60px,18vw,240px);line-height:.86;letter-spacing:-.045em;
+  font-size:clamp(80px,24vw,140px);line-height:.86;letter-spacing:-.045em;
   font-weight:800;margin:0;padding:clamp(60px,16.9vw,325px) clamp(24px,3vw,58px) clamp(10px,1vw,20px);position:relative;z-index:3;
 }
 
