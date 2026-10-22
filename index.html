@@ -83,7 +83,7 @@
     <li class="grp">Application</li>
     <li><a href="#s10"><span class="n">9.0</span> Usage &amp; Governance</a></li>
   </ul>
-  <div class="rail-foot">Version 1.0<br>Brand Operating System / Toolkit<br><a href="https://tkxel.com" target="_blank" rel="noopener">tkxel.com</a></div>
+  <div class="rail-foot">Version 1.0<br>B2B / Toolkit<br><a href="https://tkxel.com" target="_blank" rel="noopener">tkxel.com</a></div>
 </nav>
 
 <div class="content">
@@ -706,7 +706,15 @@ const newsletterShowcase=`
           </div>
         </div>
         <div class="nl-mock">
-          <img src="assets%20/newsletter_tablet_mockup%201.png" alt="tkxel newsletter template shown on a tablet mockup">
+          <div class="nl-scroll" tabindex="0" role="region" aria-label="Final Newsletter — scroll to view the full email">
+            <img src="assets%20/Final%20Newsletter.png" alt="tkxel newsletter: Final Newsletter">
+          </div>
+          <div class="nl-scroll" tabindex="0" role="region" aria-label="Final Newsletter, second issue — scroll to view the full email">
+            <img src="assets%20/Final%20Newsletter-1.png" alt="tkxel newsletter: Final Newsletter, second issue">
+          </div>
+          <div class="nl-scroll" tabindex="0" role="region" aria-label="July weekly newsletter — scroll to view the full email">
+            <img src="assets%20/July-%20weekly.png" alt="tkxel newsletter: July weekly newsletter">
+          </div>
         </div>
       </div>
     </div>
@@ -825,7 +833,9 @@ const DRIVE_URL="https://drive.google.com/drive/folders/XXXXXXXXXXXXXXXXXXXXXX";
 // real per-format Figma links, dropped in as they're supplied — anything not listed here still
 // falls back to the FIGMA_URL placeholder above
 const FIGMA_LINKS={
-  s6:"https://www.figma.com/design/YAd3TKdplp8hzzunBvHHgL/MKT---Sales-Collateral---2026?node-id=4-3&t=fTINghaGpx5yqkn3-1"
+  s1:"https://www.figma.com/design/YAd3TKdplp8hzzunBvHHgL/MKT---Sales-Collateral---2026?node-id=4-3554",
+  s6:"https://www.figma.com/design/YAd3TKdplp8hzzunBvHHgL/MKT---Sales-Collateral---2026?node-id=4-3&t=fTINghaGpx5yqkn3-1",
+  s9:"https://www.figma.com/design/YAd3TKdplp8hzzunBvHHgL/MKT---Sales-Collateral---2026?node-id=4-2285"
 };
 const figmaBtn=(id,label)=>id==="s5"
   ? `<a class="lut-download" href="${DRIVE_URL}" target="_blank" rel="noopener">Explore all ${label} on Google Drive</a>`
@@ -926,6 +936,7 @@ const NAMING_NOTES={
 // back to the dashed placeholder tiles in structureSlide below
 // Social Media (8.1) uses the asset-row carousel instead — see structureSlide's s.id==="s8"
 // branch — so its images live here rather than in REAL_COVERS
+const NEWSLETTER_ISSUES=[["Final%20Newsletter.png","Final Newsletter"],["Final%20Newsletter-1.png","Final Newsletter, second issue"],["July-%20weekly.png","July weekly newsletter"]];
 const SOCIAL_ASSET_IMAGES=Array.from({length:5},(_,i)=>({src:`assets%20/social%20media${i+1}.jpg`,alt:`Social Media asset — page ${i+1} of 5`}));
 const SOCIAL_ASSET_IMAGES_2=Array.from({length:5},(_,i)=>({src:`assets%20/social%20media2-${i+1}.jpg.png`,alt:`Social Media asset 2 — page ${i+1} of 5`}));
 const REAL_COVERS={
@@ -980,6 +991,8 @@ const structureSlide=s=>{
         <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:clamp(16px,2vw,28px)">
           ${s.id==="s8"
             ?assetRow([{name:"Social Media 1",images:SOCIAL_ASSET_IMAGES},{name:"Social Media 2",images:SOCIAL_ASSET_IMAGES_2}],"asset-frame-social")
+            :s.id==="s9"
+            ?`<div class="nl-mock">${NEWSLETTER_ISSUES.map(([f,n])=>`<div class="nl-scroll" tabindex="0" role="region" aria-label="${n} — scroll to view the full email"><img src="assets%20/${f}" alt="tkxel newsletter: ${n}"></div>`).join("")}</div>`
             :coversCarousel(covers,`wp-covers${s.id==="s5"?" wp-covers-landscape":""}`)}
           ${s.id==="s2"?"":`
           <ul class="rules">
