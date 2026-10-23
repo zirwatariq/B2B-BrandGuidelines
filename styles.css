@@ -104,7 +104,7 @@ main{margin-left:0}
 .hero-version{font-size:clamp(9px,.6vw,11px)}
 .hero-sub{display:flex;gap:14px;align-items:flex-start;margin-left:auto}
 .hero-sub .slash{font-size:clamp(16px,1.1vw,22px);font-weight:300;color:var(--ink);line-height:.7;transform:translateY(-1px)}
-.hero-sub .txt{font-family:var(--mono);font-size:clamp(9px,.6vw,12px);letter-spacing:.09em;text-transform:uppercase;line-height:1.55;color:var(--ink)}
+.hero-sub .txt{font-family:var(--mono);font-size:clamp(9px,.6vw,12px);letter-spacing:.09em;text-transform:none;line-height:1.55;color:var(--ink)}
 .hero-copy{text-align:right;padding:0 clamp(24px,3.3vw,64px) clamp(14px,1.6vw,30px);font-size:clamp(9px,.6vw,11.5px);color:var(--ink-3);position:relative;z-index:3}
 
 /* ---------- bleed slide (full-bleed image page) ---------- */
